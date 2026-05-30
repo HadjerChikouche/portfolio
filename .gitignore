@@ -20,6 +20,10 @@
 .DS_Store
 *.pem
 
+# large source PDFs (working copies / unused downloads) — keep out of git history
+/*.pdf
+/public/case-studies/*.pdf
+
 # debug
 npm-debug.log*
 yarn-debug.log*

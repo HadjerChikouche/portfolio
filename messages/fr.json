@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "work": "Projets",
+    "about": "À propos",
+    "contact": "Contact",
+    "available": "Disponible"
+  },
+  "hero": {
+    "role": "UX/UI & Product Designer",
+    "tagline": "Je conçois des expériences qui rendent les choses complexes naturelles.",
+    "cta": "Voir mes projets"
+  },
+  "featured": {
+    "title": "Projets sélectionnés",
+    "viewCase": "Voir le case study",
+    "viewAll": "Voir tous les projets"
+  },
+  "about": {
+    "teaser": "Je suis UX/UI et product designer. Je crois que le bon design naît à l'intersection de la clarté, de l'empathie et du soin apporté aux détails.",
+    "cta": "En savoir plus",
+    "title": "À propos",
+    "bio1": "Je conçois des produits numériques qui résolvent de vrais problèmes — avec un processus ancré dans la recherche, l'itération et l'attention aux détails.",
+    "bio2": "Des plateformes SaaS B2B aux applications mobiles grand public, j'ai travaillé dans différents secteurs pour transformer des défis complexes en expériences qui semblent naturelles.",
+    "philosophy": "Philosophie Design",
+    "p1title": "Clarté avant complexité",
+    "p1body": "Chaque décision de design doit réduire la friction, pas l'augmenter. Je simplifie — même quand le problème ne l'est pas.",
+    "p2title": "Systèmes, pas écrans",
+    "p2body": "Un bon product design pense en systèmes : comment les composants se relient, comment les états se comportent, comment tout passe à l'échelle.",
+    "p3title": "L'empathie comme méthode",
+    "p3body": "La recherche n'est pas une case à cocher. Comprendre la vraie personne qui utilise le produit est la seule façon de concevoir quelque chose qui fonctionne réellement.",
+    "tools": "Outils & Compétences",
+    "downloadCV": "Télécharger le CV",
+    "experience": "Expérience",
+    "stats": {
+      "experience": "Années d'expérience",
+      "projects": "Projets livrés",
+      "industries": "Industries"
+    }
+  },
+  "work": {
+    "title": "Projets",
+    "subtitle": "Projets sélectionnés en product design, UX research et design systems.",
+    "filter": {
+      "all": "Tous",
+      "product": "Product Design",
+      "ux": "UX Research",
+      "system": "Design System",
+      "mobile": "Mobile",
+      "service": "Service Design"
+    },
+    "viewCase": "Voir le case study",
+    "role": "Rôle",
+    "duration": "Durée",
+    "tools": "Outils",
+    "platform": "Plateforme",
+    "count": "projets",
+    "nextProject": "Projet suivant"
+  },
+  "contact": {
+    "title": "Parlons-en",
+    "subtitle": "Je suis ouverte à de nouvelles opportunités en product design et UX — freelance ou temps plein.",
+    "available": "Disponible pour de nouveaux projets",
+    "notAvailable": "Actuellement non disponible",
+    "form": {
+      "name": "Nom",
+      "email": "Email",
+      "message": "Message",
+      "placeholder": {
+        "name": "Votre nom",
+        "email": "votre@email.com",
+        "message": "Parlez-moi de votre projet..."
+      },
+      "send": "Envoyer",
+      "sending": "Ouverture de votre messagerie...",
+      "success": "Votre application mail devrait s'ouvrir avec votre message prêt à envoyer — il ne reste qu'à l'envoyer. Si rien ne se passe, écrivez-moi directement à chikouche.hadjer@gmail.com.",
+      "error": "Impossible d'ouvrir votre messagerie. Écrivez-moi directement à chikouche.hadjer@gmail.com.",
+      "errors": {
+        "name": "Veuillez saisir votre nom (au moins 2 caractères).",
+        "email": "Veuillez saisir une adresse email valide.",
+        "message": "Veuillez écrire un message (au moins 10 caractères)."
+      }
+    }
+  },
+  "footer": {
+    "rights": "Tous droits réservés.",
+    "designed": "Conçu & développé par Hadjer Chikouche"
+  }
+}

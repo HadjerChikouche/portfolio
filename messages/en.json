@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "work": "Work",
+    "about": "About",
+    "contact": "Contact",
+    "available": "Available"
+  },
+  "hero": {
+    "role": "UX/UI & Product Designer",
+    "tagline": "I design experiences that make complex things feel simple.",
+    "cta": "See my work"
+  },
+  "featured": {
+    "title": "Selected Work",
+    "viewCase": "View case study",
+    "viewAll": "View all projects"
+  },
+  "about": {
+    "teaser": "I'm a UX/UI and product designer who believes great design lives at the intersection of clarity, empathy, and craft.",
+    "cta": "More about me",
+    "title": "About",
+    "bio1": "I design digital products that solve real problems — with a process rooted in research, iteration, and attention to detail.",
+    "bio2": "From B2B SaaS platforms to consumer mobile apps, I've worked across industries to turn complex challenges into experiences that feel effortless.",
+    "philosophy": "Design Philosophy",
+    "p1title": "Clarity over complexity",
+    "p1body": "Every design decision should reduce friction, not add to it. I simplify — even when the problem isn't simple.",
+    "p2title": "Systems, not screens",
+    "p2body": "Good product design means thinking in systems: how components relate, how states behave, how everything scales.",
+    "p3title": "Empathy as method",
+    "p3body": "Research isn't a checkbox. Understanding the real person using the product is the only way to design something that actually works.",
+    "tools": "Tools & Skills",
+    "downloadCV": "Download CV",
+    "experience": "Experience",
+    "stats": {
+      "experience": "Years of experience",
+      "projects": "Projects delivered",
+      "industries": "Industries"
+    }
+  },
+  "work": {
+    "title": "Work",
+    "subtitle": "Selected projects in product design, UX research, and design systems.",
+    "filter": {
+      "all": "All",
+      "product": "Product Design",
+      "ux": "UX Research",
+      "system": "Design System",
+      "mobile": "Mobile",
+      "service": "Service Design"
+    },
+    "viewCase": "View case study",
+    "role": "Role",
+    "duration": "Duration",
+    "tools": "Tools",
+    "platform": "Platform",
+    "count": "projects",
+    "nextProject": "Next project"
+  },
+  "contact": {
+    "title": "Let's talk",
+    "subtitle": "I'm open to new product design and UX opportunities — freelance or full-time.",
+    "available": "Available for new projects",
+    "notAvailable": "Currently not available",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "placeholder": {
+        "name": "Your name",
+        "email": "your@email.com",
+        "message": "Tell me about your project..."
+      },
+      "send": "Send message",
+      "sending": "Opening your email app...",
+      "success": "Your email app should now be open with your message ready — just hit send. If nothing happened, email me directly at chikouche.hadjer@gmail.com.",
+      "error": "Couldn't open your email app. Please email me directly at chikouche.hadjer@gmail.com.",
+      "errors": {
+        "name": "Please enter your name (at least 2 characters).",
+        "email": "Please enter a valid email address.",
+        "message": "Please write a message (at least 10 characters)."
+      }
+    }
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "designed": "Designed & built by Hadjer Chikouche"
+  }
+}

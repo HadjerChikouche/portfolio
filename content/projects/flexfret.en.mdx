@@ -1,0 +1,151 @@
+## Overview
+
+FlexFret is a real-time freight logistics platform connecting dispatchers, carriers, and drivers across live shipment operations. I designed the product from first principles — not as a series of screens, but as a user interface derived directly from the underlying distributed system.
+
+The result: a design system, six state machines, and six interaction patterns that make a fundamentally unreliable system feel reliable.
+
+---
+
+## The Problem
+
+### Logistics platforms are not just interfaces. They are distributed systems.
+
+Every logistics platform is a distributed system — a single source of truth that multiple actors read from and write to simultaneously, with latency, failures, and race conditions as first-class concerns.
+
+The existing UI was designed as if it were a database viewer: show data, let users edit it. But in a real-time logistics context, this assumption broke constantly.
+
+### Four distributed system problems that drive every UX decision
+
+**Race Conditions** — A driver accepts an offer. The system takes 200–800ms to confirm. Another driver may have accepted simultaneously. The UI must reflect all three possible outcomes without confusing the user.
+
+**Latency** — Commands taking 200–800ms to confirm. On mobile networks in rural freight corridors, command round-trips can take 2–5 seconds. Without optimistic UI, every tap feels broken.
+
+**Failures** — Assignment errors drop system state. Failures come in two categories: transient (network timeout, server overload) and permanent (business rule rejection). Each requires a different UI posture.
+
+**Stale Data** — A dispatcher views an assignment that was updated 4 minutes ago. A driver is 30km from where the map shows them. None of this is a bug — it's the nature of distributed systems. The UX must communicate it clearly.
+
+<Callout>The UX is not a layer on top of the system. It is directly derived from it.</Callout>
+
+---
+
+## Domain-Driven Design → UI
+
+The FlexFret UI is built directly from Domain-Driven Design concepts. Every backend concept maps to a specific UI responsibility:
+
+| DDD Concept | Backend Role | UX Equivalent | Example in FlexFret |
+|---|---|---|---|
+| Command | Intent sent by actor | User action / form submit | "Accept Offer" button tap → AcceptOffer command |
+| Event | Fact emitted by system | UI state update / notification | OfferAccepted event → Assignment card appears |
+| Read Model | Projected current state | Screen / component data source | DriverAssignmentView → Assignment Panel |
+| Aggregate | Consistency boundary | Component scope / isolation | Offer aggregate → Offer Card component |
+| Bounded Context | Domain boundary | Actor view / screen domain | Driver context → Offer Inbox screen |
+
+The key principle: every component in FlexFret is a direct read model projection. It can only be in states that the backend event stream allows. The design system is not a visual library — it is a UX expression of the domain model.
+
+---
+
+## The Three Product Interfaces
+
+Every screen is a read model. Every state is intentional. These are not mockups built in isolation — each screen is the visual projection of a backend state machine, rendered through the component system.
+
+<CaseImage src="/images/flexfret/ui-three-screens.png" alt="FlexFret — three main product interfaces: Driver Offer Inbox, Driver Shipment Tracking, Dispatcher Matching Workbench" caption="Driver — Offer Inbox · Driver — Shipment Tracking · Dispatcher — Matching Workbench" />
+
+**Offer Inbox** — Real-time offer list with per-offer state (open, expired, pending confirmation). Countdown timer triggers visual state transitions. Optimistic acceptance with rollback on conflict.
+
+**Shipment Tracking** — Event-driven timeline showing confirmed milestones. Sync badge indicates live connection. ETA reflects latest GPS position, not a calculation.
+
+**Matching Workbench** — Active offers with ranked driver candidates. Live indicator and confirmation flow. Driven by event timestamps, not self-reported values.
+
+---
+
+## Design System
+
+### A domain-driven component library — not a visual one.
+
+The FlexFret design system is organized around **system state categories**, not visual patterns. Every component is a rendering of a specific kind of backend state. This makes the system predictable, extensible, and directly aligned with engineering.
+
+### State Primitives — Atomic indicators for distributed state
+
+The lowest level of the system: individual visual atoms that communicate a single state concept — a domain lifecycle, an async command state, an SLA health signal, a countdown, a sync indicator, or a conflict flag — each with a distinct visual language.
+
+<CaseImage src="/images/flexfret/ui-primitives.png" alt="FlexFret State Primitives — all 6 primitive families: Status, Async State, SLA/Time, Countdown, Sync, Conflict/Divergence" caption="State Primitives: six atomic families, each encoding a distinct system concept" />
+
+### Composed Components — Full UI surfaces built from primitives
+
+Six major UI components covering the complete lifecycle from offer to delivery. Each composed component wraps primitives into a coherent surface with defined state coverage.
+
+<CaseImage src="/images/flexfret/ui-composed.png" alt="FlexFret Composed Components — Status Badge System, Offer Card, Timeline, Assignment Panel, Exception Banner, Data Table" caption="Composed Components: all major UI surfaces, offer to delivery" />
+
+**Offer Card** — Represents the full offer lifecycle: Open (with countdown) → Pending Acceptance → Accepted Not Confirmed → Confirmed. Each state changes available controls and information hierarchy. A driver never sees an action that doesn't correspond to a valid command.
+
+**Timeline Component** — Event-driven milestone visualization. Only shows confirmed events. Progress indicator is a real-time read from the event log, not a calculation.
+
+**Assignment Panel** — Driver assignment with next action. CTA changes based on assignment state: "Confirm Arrival at Pickup", "Confirm Load Complete". Progress driven by event timestamps.
+
+**Exception Banner** — Four severity levels (Info, Warning, Error, Critical) with consistent structure: what went wrong, who owns it, when, what to do next. Retry and Escalate actions route to the correct pattern.
+
+---
+
+## State Machines
+
+### State machines are not an engineering concern. They are a design tool.
+
+Every interactive component in FlexFret is backed by an explicit state machine. This isn't technical formality — it's how the design makes explicit claims about every possible UI scenario. **There are no undefined states in this UI.**
+
+Without formal state modeling, UX designers implicitly assume a happy path. Edge cases — timeout during offer acceptance, conflict on assignment confirmation, offline during delivery completion — either get discovered in QA or, worse, in production. State machines force enumeration before a single pixel is rendered.
+
+<CaseImage src="/images/flexfret/ui-state-machines.png" alt="FlexFret State Machines — 6 formal specifications: Offer Acceptance, Assignment Lifecycle, Command Processing, Offline Sync, Data Staleness, Conflict Resolution" caption="Six state machines: formal specifications for every interactive surface" />
+
+**Offer Acceptance** — `AVAILABLE → OPTIMISTIC_ACCEPT → PENDING_CONFIRMATION → ACCEPTED`. Only one driver can reach ACCEPTED per offer. PENDING_CONFIRMATION must timeout after 30s max.
+
+**Assignment Lifecycle** — 12 states: CREATED → MATCHING → ASSIGNED → EN_ROUTE_PICKUP → ARRIVED_PICKUP → LOADING → IN_TRANSIT → ARRIVED_DELIVERY → UNLOADING → COMPLETED, plus DELAYED, CANCELLED, FAILED branches.
+
+**Command Processing** — Covers every user action across all actor views through the full request lifecycle including optimistic state, server confirmation, exponential backoff, and permanent failure.
+
+**Offline Sync** — `ONLINE → DEGRADED → OFFLINE → SYNCING → SYNC_COMPLETE`. Six-phase connection restoration. Commands queued offline persist to IndexedDB.
+
+**Data Staleness** — `FRESH (<5s) → RECENT (5–30s) → STALE (30s–5m) → VERY_STALE (>5m) → REFRESHING`. Actions blocked or degraded based on data age.
+
+**Conflict Resolution** — `NO_CONFLICT → CONFLICT_DETECTED → ANALYZING → AUTO_RESOLVABLE / REQUIRES_USER → RESOLVED`. Four conflict types, four resolution strategies.
+
+---
+
+## Interaction Patterns
+
+Six formal interaction patterns documented as behavioral specifications for the engineering team — defining exactly what the UI does in every scenario, not just the happy path.
+
+<CaseImage src="/images/flexfret/ui-interactions.png" alt="FlexFret Interaction Patterns — 6 behavioral specifications: Optimistic UI, Retry After Failure, Conflict Resolution, Offline Mode, Data Staleness, Event Reordering" caption="Six interaction patterns: behavioral specifications for every system failure mode" />
+
+**Optimistic UI** — Show intended state immediately, reconcile with authoritative state. Four behavior rules: immediate visual feedback → command sent to backend → confirmation window → timeout triggers conflict resolution.
+
+**Retry After Failure** — Exponential backoff: 1s → 2s → 4s → 8s → 16s → Manual. Three failure categories: Transient Network (retry), Server 5xx (retry), Business Rule Rejection (do NOT retry).
+
+**Conflict Resolution** — Four conflict types mapped to four strategies: Concurrent Action → Last-Write-Loses. Stale Read → Refresh-and-Notify. Business Rule → System-Initiated-Update. Event Reordering → Timestamp-Based-Ordering.
+
+**Offline Mode (Driver)** — Five connectivity states with explicit capability sets at each level. Six-phase connection restoration flow. Commands queued offline, synced on reconnect.
+
+**Data Staleness** — FRESH: no indicator. RECENT: no indicator. STALE: show banner, auto-refresh. VERY_STALE: force refresh, disable critical actions.
+
+**Event Reordering** — Handles out-of-order arrival, delayed events, duplicates, partial updates. Critical events (ShipmentCancelled, SLABreach, SystemEmergency) always processed immediately regardless of ordering.
+
+---
+
+## Four Deliberate Choices
+
+**Expose system states instead of hiding them.** The default instinct is to hide complexity — show a spinner until the system is ready. FlexFret meets visual complexity in exchange for operator trust. Operators who understand what the system is doing make better decisions.
+
+**Design for failure as the default, not the exception.** Every failure state is a first-class design concern. Error, timeout, and conflict screens receive the same design investment as success states. The result: a product that handles failure gracefully, because it was designed to.
+
+**Synchronize multiple actors through event visibility.** When a dispatcher assigns a driver, the driver needs to know why. The design exposes event causality across actor boundaries — eliminating the most common source of coordination failures.
+
+**Event-driven UX over request-response UX.** You submit, the server queues, events confirm or deny. More complex frontend state management — but scales to concurrent actors on live shared state.
+
+---
+
+## Conclusion
+
+<Callout>"The best UX for a distributed system is one that makes the system's behavior legible — not one that hides it."</Callout>
+
+FlexFret was designed from the domain model outward — not from wireframes inward. Every component is a read model. Every interaction pattern is a formal specification. Every state transition is enumerated before a single screen exists.
+
+The result is a product where engineering and design speak the same language: Commands, Events, State Machines, Aggregates. Where a new backend event automatically becomes a UI state. Where every failure mode has a designed recovery path.

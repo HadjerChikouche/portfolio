@@ -1,0 +1,160 @@
+## Vue d'ensemble
+
+OCUS est une marketplace photo qui connecte des marques mondiales à un réseau de photographes professionnels pour des shootings commerciaux. J'ai conçu **AI Image Enhancement** — une plateforme d'opérations média interne qui repense le contrôle qualité à grande échelle.
+
+Le défi n'était pas esthétique. Il était systémique : comment rendre le contrôle qualité assisté par IA lisible et fiable, quand les opérateurs ne peuvent pas vérifier chaque décision manuellement ?
+
+---
+
+## Le Problème
+
+### Le QA manuel échouait sur trois dimensions simultanément
+
+Le processus existant demandait aux opérateurs humains de contrôler chaque image de chaque collection. À l'échelle d'OCUS, cela s'effondrait de trois façons à la fois :
+
+**Volume** — L'équipe ne pouvait pas inspecter 10 000+ images par collection sans compresser le temps de revue au point de le rendre inutile.
+
+**Ambiguïté** — Les décisions qualité étaient subjectives. Des opérateurs différents prenaient des décisions différentes sur la même image. Il n'existait aucun standard partagé, seulement des normes informelles.
+
+**Cohérence de marque** — Chaque client avait des exigences esthétiques différentes. Sans moyen d'encoder ces exigences en amont, les corrections arrivaient en aval — dans des cycles de révision, pas à la soumission.
+
+---
+
+## Paysage Concurrentiel
+
+### Huit concurrents. Personne ne possédait le pipeline complet.
+
+J'ai cartographié le marché selon deux axes : évaluation de la qualité image vs. capacité d'amélioration. Chaque concurrent dominait un axe. Personne n'avait construit un pipeline intégré QA + Amélioration + Livraison. C'est ce manque qui constituait l'opportunité produit.
+
+| Concurrent | Type | Capacité | Écart vs OCUS |
+|---|---|---|---|
+| Clarifai | IA Image | Évaluation qualité & benchmark d'amélioration | Pas de couche workflow ; API uniquement |
+| Photoroom | Enrichissement | Détourage, composition, suppression fond | Plateforme photo d'abord ; pas de QA IA |
+| RestB | IA Image | Reconnaissance et tagging d'images immobilières | Vertical spécifique ; non extensible |
+| Previsite / Nodalview | Perf image + Enrichissement | Métriques de performance + couche enrichissement | Vertical étroit ; pas de food/ecomm |
+| Foxy AI / Imagen | IA Image | Génération d'images & scoring qualité basique | Pas d'application des règles de marque |
+
+---
+
+## Architecture
+
+### Un système de décision à trois acteurs, pas un outil à écran unique
+
+Le produit fonctionnait comme un système de décision à trois acteurs. **Les opérateurs** géraient les exceptions QA et protégeaient le débit. **Les brand managers** définissaient les règles qualité et évaluaient l'impact commercial. **Les services IA** détectaient les défauts, proposaient des améliorations, et produisaient des décisions scorées par niveau de confiance.
+
+L'IA n'était pas un utilitaire de fond — c'était un décideur actif dont les outputs façonnaient le workflow, la priorité des files, et l'attention humaine. Cela a transformé le problème de design en un modèle opératoire distribué à quatre frontières système.
+
+---
+
+## Cinq Décisions Architecturales
+
+Chaque choix structurel résultait d'un arbitrage entre performance système et contraintes opérationnelles découvertes en recherche. Les changements à plus fort levier étaient structurels, pas visuels.
+
+<DecisionGrid>
+<Decision number="Décision 01" title="Examiner les exceptions, pas chaque asset">
+La revue manuelle de chaque image ne passait pas à l'échelle. Le compromis : limiter la supervision humaine en échange du débit. Le scoring de confiance de l'IA détermine ce qui remonte à la revue — les opérateurs ne voient jamais le travail routinier.
+</Decision>
+<Decision number="Décision 02" title="Déplacer la configuration de marque au début du flux">
+Les décisions qualité dépendaient de seuils spécifiques à la marque, mais la configuration arrivait trop tard. La déplacer en amont permettait à l'IA d'appliquer le bon standard automatiquement, sans intervention opérateur image par image.
+</Decision>
+<Decision number="Décision 03" title="Combiner les constats QA et les actions d'amélioration sur une seule surface">
+Séparer la revue de l'amélioration forçait à changer de contexte. Une surface unifiée permettait des décisions plus rapides et mieux informées, avec le contexte qualité complet visible en un seul endroit.
+</Decision>
+<Decision number="Décision 04" title="Utiliser les presets comme unité de passage à l'échelle">
+La configuration image par image rendait le débit et la cohérence impossibles. Les presets permettent de configurer une fois et d'appliquer à toute une collection, réduisant la charge cognitive et les taux d'erreur.
+</Decision>
+<Decision number="Décision 05" title="Traduire les opérations en métriques business">
+Les équipes opérationnelles pouvaient suivre l'activité de traitement, mais les brand managers avaient besoin de preuves de valeur commerciale. L'ajout de métriques connectées aux outputs a rendu la performance visible pour ceux qui finançaient le pipeline.
+</Decision>
+</DecisionGrid>
+
+---
+
+## Les Trois Flux
+
+### Flux 1 — Ingestion de collection
+
+L'opérateur upload un lot, sélectionne un preset client, et déclenche le traitement IA. Les images sont routées automatiquement selon le scoring de confiance — pas de triage manuel de la file complète.
+
+Les résultats haute confiance avancent directement. Les cas ambigus ou basse confiance remontent dans la file de revue. L'opérateur ne voit jamais le travail routinier.
+
+<CaseImage src="/images/ocus/ui-flow1-screens.png" alt="Flux 1 : Écran de création de collection et upload média avec panneau de settings" caption="Écran 1.1 — Création de collection (point d'entrée drag-drop) · Écran 1.2 — Upload média avec configuration des settings en parallèle" />
+
+<CaseImage src="/images/ocus/ui-flow1-routing.png" alt="Flux 1 : Logique de routage d'ingestion — Upload Batch → Sélection Preset → Traitement IA → Auto-approuvé ou File de revue → Livraison" caption="Fig. 2 — Routage basé sur la confiance : chemin automatisé vs. chemin de revue par exception" />
+
+### Flux 2 — Revue assistée par IA
+
+L'opérateur ouvre une collection sur laquelle les décisions IA ont déjà été appliquées. Les résultats haute confiance restent peu intrusifs. Les cas ambigus sont remontés. La surface de revue affiche les problèmes détectés et les propositions d'amélioration dans un seul contexte de décision.
+
+<Callout>L'opérateur ne devrait pas examiner les outputs IA. Il devrait examiner les exceptions — les cas où l'incertitude de l'IA est assez haute pour justifier un jugement humain.</Callout>
+
+<CaseImage src="/images/ocus/ui-flow2-review.png" alt="Flux 2 : Revue par lot assistée IA — QA et actions d'amélioration co-localisés" caption="Écran 2 — Revue par lot assistée IA : Barre de sélection · Checklist QA IA · Panneau d'amélioration" />
+
+### Flux 3 — Livraison et reporting
+
+Les assets approuvés passent en livraison finale. Les assets rejetés entrent en récupération. Deux surfaces dashboard servent des horizons temporels différents — une vue temps réel pour le monitoring opérationnel, une vue reporting pour les métriques client.
+
+<CaseImage src="/images/ocus/ui-flow3-delivery.png" alt="Flux 3 : Dashboards de livraison — vue d'accueil avec synthèse de résultat et vue statistiques avec tendances longitudinales" caption="Écran 3.1 — Vue d'accueil : synthèse résultat de collection avec arbre de solutions IA · Écran 3.2 — Vue statistiques : tendance longitudinale & répartition des services IA" />
+
+Chaque image a suivi un cycle de vie de décision clair — routé par la confiance, résolu par l'autorité de l'acteur.
+
+<CaseImage src="/images/ocus/ui-flow3-lifecycle.png" alt="State Machine d'un média — Cycle de vie complet : Uploadé → Traitement → Évalué IA → Routé → Auto-approuvé ou Revue requise → Approuvé / Amélioré / Rejeté → Livré" caption="Fig. 3 — Cycle de vie complet d'un média : routé par la confiance, résolu par l'autorité de l'acteur" />
+
+---
+
+## Modèle d'Interaction
+
+### Construit autour de la gestion de l'incertitude, pas du polish visuel
+
+Le modèle d'interaction avait cinq principes directeurs, chacun dérivé directement de la logique de routage du système et du workflow opérateur — pas des conventions UI.
+
+**La densité d'information était déterminée par la confiance IA.** Les images haute confiance montraient des contrôles minimaux. Les images basse confiance exposaient tout le contexte disponible, les alternatives, et une action de validation.
+
+**Prévisualisation et validation étaient séparées.** Cocher enregistrait "en attente" — pas validé. Valider nécessitait une confirmation explicite. Cela donnait aux opérateurs le temps de comparer les alternatives avant de verrouiller une décision.
+
+**Les opérations par lot étaient la primitive d'interaction par défaut.** La sélection individuelle était secondaire. Les CTAs principaux changeaient selon l'état de la file : tout sélectionner, approuver la sélection, escalader les exceptions.
+
+**Les overrides restaient explicites.** L'intervention manuelle était réservée aux cas limites. Le système n'a jamais silencieusement outrepassé une action utilisateur.
+
+**La configuration réduisait la charge en aval.** Toute flexibilité exposée dans l'interface devait se payer en supprimant des décisions plus loin dans le pipeline.
+
+---
+
+## Trois Découvertes Qui Ont Changé le Produit
+
+**Le timing des presets était mauvais.** Les utilisateurs créaient les presets après la sélection initiale, pas avant. Découvert uniquement en test utilisateur — aucun raffinement visuel n'aurait pu le révéler. Déplacer la sélection du preset plus tôt a éliminé la principale source d'erreurs de configuration.
+
+**Le nommage des KPIs était trop abstrait.** Les métriques opérationnelles utilisaient une terminologie interne que les opérateurs comprenaient, mais pas les brand managers. Renommer les métriques selon leurs implications commerciales en aval a amélioré la compréhension partagée et la confiance dans le système.
+
+**Le modèle mental du pipeline IA a été assimilé rapidement.** Les opérateurs comprenaient la logique de décision de l'IA dès la première session. Le défi n'était pas l'adoption de l'IA — c'était de préserver l'efficacité d'apprentissage des opérateurs tout en maintenant la densité d'information contextuelle.
+
+---
+
+## Résultats
+
+<Metrics>
+<Metric value="120h" label="économisées par mois — le routage par exceptions a remplacé la revue universelle" />
+<Metric value="+24%" label="performance média — co-localisation des décisions QA et d'amélioration" />
+<Metric value="+16%" label="précision des livrables — les presets ont appliqué les règles de marque de façon cohérente" />
+<Metric value="10k" label="images traitées en pilote live — débit à l'échelle de la production validé" />
+</Metrics>
+
+**120h économisées** par le routage par exception. Déplacer l'attention humaine de la revue universelle vers les cas ambigus a effondré la file d'inspection sans réduire le contrôle qualité.
+
+**+24% de performance média** par la co-localisation. Intégrer les décisions d'amélioration directement dans le workflow QA a poussé l'adoption opérateur des améliorations IA qui étaient auparavant ignorées.
+
+**+16% de précision des livrables** par les presets. Appliquer les règles de marque de façon cohérente sur toute une collection, plutôt que selon le jugement de chaque opérateur, a éliminé l'incohérence qui était la principale source de retravail.
+
+**10 000 images traitées** en pilote live ont validé que le système gérait un débit à l'échelle de la production, pas une charge de prototype contrôlée.
+
+---
+
+## Apprentissages Clés
+
+**Le modèle système importait plus que la couche interface.** Les utilisateurs ont formé des modèles mentaux de la logique de décision de l'IA dès la première session. Obtenir le bon modèle était un levier plus fort que n'importe quel raffinement visuel.
+
+**Les presets étaient un primitif produit stratégique.** Ce n'était pas une fonctionnalité de configuration — c'était le mécanisme qui rendait les décisions IA lisibles et cohérentes pour l'ensemble des clients.
+
+**La confiance en l'IA venait du cadrage de la décision, pas du volume d'explication.** Les opérateurs n'avaient pas besoin de comprendre le fonctionnement de l'IA. Ils avaient besoin de comprendre ce que l'IA décidait, et quand l'outrepasser.
+
+**Les changements à plus fort levier étaient architecturaux.** Déplacer la sélection du preset plus tôt, intégrer l'amélioration dans le QA, router par la confiance — aucune de ces décisions n'était une décision UI. C'étaient des choix structurels que le design visuel a ensuite rendus exécutables.

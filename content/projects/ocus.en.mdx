@@ -1,0 +1,160 @@
+## Overview
+
+OCUS is a photography marketplace that connects global brands with a network of professional photographers for commercial shoots. I designed **AI Image Enhancement** — an internal media operations platform that rethinks quality control at scale.
+
+The challenge wasn't aesthetic. It was systemic: how do you make AI-assisted QA feel legible and trustworthy when operators can't verify every decision manually?
+
+---
+
+## The Problem
+
+### Manual QA failed on three dimensions simultaneously
+
+The existing process asked human operators to review every image in every batch. At OCUS's scale, this broke down in three ways at once:
+
+**Volume** — The team couldn't inspect 10,000+ images per collection without compressing review time to the point of uselessness.
+
+**Ambiguity** — Quality decisions were subjective. Different operators made different calls on the same image. There was no shared standard, only informal norms.
+
+**Brand consistency** — Each client had different aesthetic requirements. Without a way to encode those requirements upfront, corrections happened downstream — in revision cycles, not at submission.
+
+---
+
+## Competitive Landscape
+
+### Eight competitors. No one owned the full pipeline.
+
+I mapped the market against two axes: image quality assessment vs. enhancement capability. Every competitor dominated one axis. No one had built a vertically integrated QA + Enhance + Deliver pipeline. That gap was the product opportunity.
+
+| Competitor | Type | Capability | Gap vs OCUS |
+|---|---|---|---|
+| Clarifai | AI Image | Quality assessment & enhancement benchmark | No workflow layer; API-only |
+| Photoroom | Enrichment | Clipping, compositing, BG removal | Photography platform first; no AI QA |
+| RestB | AI Image | Real estate image recognition & tagging | Vertical-specific; not extensible |
+| Previsite / Nodalview | Image perf + Enrichment | Performance metrics + enrichment layer | Narrow vertical; no food/ecomm |
+| Foxy AI / Imagen | AI Image | Image generation & basic quality scoring | No brand guideline enforcement |
+
+---
+
+## Architecture
+
+### A three-party decision system, not a single-screen tool
+
+The product operated as a three-party decision system. **Operators** managed QA exceptions and protected throughput. **Brand managers** defined quality rules and evaluated business impact. **AI services** detected defects, proposed enhancements, and produced confidence-scored decisions.
+
+The AI was not a background utility — it was an active decision-maker whose outputs shaped workflow, queue priority, and human attention. That shifted the design problem from a distributed operating model with four system boundaries.
+
+---
+
+## Five Architectural Decisions
+
+Each structural choice came from weighing system performance against operational constraints discovered in research. The highest-leverage design changes were structural, not visual.
+
+<DecisionGrid>
+<Decision number="Decision 01" title="Review exceptions, not every asset">
+Manual review of every image did not scale. The trade-off: limit human oversight in exchange for throughput. AI confidence scoring determines what surfaces for review — operators never see routine work.
+</Decision>
+<Decision number="Decision 02" title="Move brand configuration to the start of the flow">
+Quality decisions depended on brand-specific thresholds, but configuration happened too late. Moving it upstream meant AI could apply the correct standard automatically, without per-image operator intervention.
+</Decision>
+<Decision number="Decision 03" title="Combine QA findings and enhancement actions in one surface">
+Splitting review from enhancement forced context-switching. A unified surface meant faster, better-informed decisions with the full quality context visible at once.
+</Decision>
+<Decision number="Decision 04" title="Use presets as the unit of scale, not individual settings">
+Per-image configuration made throughput and consistency impossible. Presets let operators configure once and apply across collections, reducing cognitive load and lowering error rates.
+</Decision>
+<Decision number="Decision 05" title="Translate operations into business metrics">
+Operational teams could track processing activity, but brand stakeholders needed evidence of commercial value. Adding output-connected metrics made performance visible to the people who funded the pipeline.
+</Decision>
+</DecisionGrid>
+
+---
+
+## The Three Flows
+
+### Flow 1 — Collection ingestion
+
+The operator uploads a batch, selects a client preset, and triggers AI processing. Images route automatically based on confidence scoring — no manual triage of the full queue.
+
+High-confidence results proceed directly. Low-confidence or ambiguous cases surface in the review queue. The operator never sees routine work.
+
+<CaseImage src="/images/ocus/ui-flow1-screens.png" alt="Flow 1: Collection creation screen and Media upload with settings panel" caption="Screen 1.1 — Collection creation (drag-drop entry point) · Screen 1.2 — Media upload with parallel settings configuration" />
+
+<CaseImage src="/images/ocus/ui-flow1-routing.png" alt="Flow 1: Ingestion routing logic — Batch Upload → Preset Select → AI Processing → Auto-approved or Review queue → Delivery" caption="Fig. 2 — Confidence-based routing: automated vs. exception review path" />
+
+### Flow 2 — AI-mediated review
+
+The operator opens a collection where AI decisions have already been applied. High-confidence results remain low-friction. Ambiguous cases are surfaced. The review surface shows detected issues and enhancement proposals together in one decision context.
+
+<Callout>The operator shouldn't be reviewing AI outputs. They should be reviewing exceptions — the cases where AI uncertainty is high enough to warrant human judgment.</Callout>
+
+<CaseImage src="/images/ocus/ui-flow2-review.png" alt="Flow 2: AI-mediated batch review — co-located QA and enhancement actions" caption="Screen 2 — AI-mediated batch review: Batch Selection Bar · AI QA Checklist · Enhance Panel" />
+
+### Flow 3 — Delivery and reporting
+
+Approved assets move to final delivery. Rejected assets enter recovery. Two dashboard surfaces serve different time horizons — a real-time view for operational monitoring, a reporting view for client-facing metrics.
+
+<CaseImage src="/images/ocus/ui-flow3-delivery.png" alt="Flow 3: Delivery dashboards — home view with collection outcome summary and statistics view with longitudinal trends" caption="Screen 3.1 — Home view: collection outcome summary with AI solution tree · Screen 3.2 — Statistics view: longitudinal trend & AI service breakdown" />
+
+Each image followed a clear decision lifecycle — routed by confidence, resolved by actor authority.
+
+<CaseImage src="/images/ocus/ui-flow3-lifecycle.png" alt="Media Item State Machine — Full Lifecycle: Uploaded → Processing → AI Assessed → Routed → Auto-approved or Review Required → Approved / Enhanced / Rejected → Delivered" caption="Fig. 3 — Full media lifecycle: routed by confidence, resolved by actor authority" />
+
+---
+
+## Interaction Model
+
+### Built around uncertainty management, not visual polish
+
+The interaction model had five governing principles, each derived directly from the system's routing logic and operator workflow — not from UI conventions.
+
+**AI confidence determined information density.** High-confidence images showed minimal controls. Low-confidence images surfaced all available context, alternatives, and a commit action.
+
+**Preview and commit were separated.** Toggling registered "pending" — not committed. Committing required explicit confirmation. This gave operators time to compare alternatives before locking a decision.
+
+**Batch operations were the default interaction primitive.** Individual selection was secondary. The primary CTAs changed based on queue state: select all, approve selection, escalate exceptions.
+
+**Overrides stayed explicit.** Manual intervention was reserved for edge conditions. The system never silently overrode a user action.
+
+**Configuration reduced downstream load.** Any flexibility exposed in the interface had to pay for itself by removing decisions further down the pipeline.
+
+---
+
+## Three Findings That Changed the Product
+
+**Preset timing was wrong.** Users created presets after initial selection, not before. Discovered only in usability testing — no visual refinement would have caught it. Moving preset selection earlier eliminated the primary source of configuration errors.
+
+**KPI naming was too abstract.** Operational metrics used internal terminology that operators understood, but brand stakeholders didn't. Renaming metrics to their downstream commercial implications improved shared understanding and confidence in the system.
+
+**AI pipeline mental model was grasped quickly.** Operators understood the AI's decision logic within the first session. The challenge wasn't AI adoption — it was preserving operator learning efficiency while maintaining contextual information density.
+
+---
+
+## Outcomes
+
+<Metrics>
+<Metric value="120h" label="saved per month — exception routing replaced universal review" />
+<Metric value="+24%" label="media performance — co-location of QA and enhancement decisions" />
+<Metric value="+16%" label="deliverable accuracy — presets applied brand rules consistently" />
+<Metric value="10k" label="images processed in live pilot — production-scale throughput validated" />
+</Metrics>
+
+**120h saved** came from exception routing. Shifting human attention from universal review to ambiguous cases collapsed the inspection queue without reducing quality control.
+
+**+24% media performance** came from co-location. Embedding enhancement decisions directly into the QA workflow drove operator adoption of AI improvements that had previously been ignored.
+
+**+16% deliverable accuracy** came from presets. Applying brand rules consistently across collections, rather than per-operator judgment, eliminated the inconsistency that had been the primary source of rework.
+
+**10,000 images processed** in a live pilot validated that the system handled production-scale throughput, not a controlled prototype workload.
+
+---
+
+## Key Learnings
+
+**The system model mattered more than the interface layer.** Users formed mental models of the AI's decision logic within the first session. Getting the model right was higher leverage than any visual refinement.
+
+**Presets were a strategic product primitive.** They weren't a configuration feature — they were the mechanism that made AI decisions legible and consistent across clients.
+
+**AI trust came from decision framing, not explanation volume.** Operators didn't need to understand how the AI worked. They needed to understand what the AI was deciding, and when to override it.
+
+**The highest-leverage changes were architectural.** Moving preset selection earlier, embedding enhancement in QA, routing by confidence — none of these were UI decisions. They were structural choices that visual design then made executable.
