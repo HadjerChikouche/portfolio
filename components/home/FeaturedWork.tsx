@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { getFeaturedProjects } from '@/lib/projects';
+import ArrowLink from '@/components/ui/ArrowLink';
 
 export default function FeaturedWork() {
   const t = useTranslations('featured');
@@ -15,12 +17,9 @@ export default function FeaturedWork() {
     <section className="max-w-6xl mx-auto px-6 py-32">
       <div className="flex items-end justify-between mb-16">
         <h2 className="font-display font-700 text-4xl md:text-5xl tracking-tight">{t('title')}</h2>
-        <Link
-          href={`/${locale}/work`}
-          className="text-sm text-muted hover:text-foreground transition-colors hidden md:block"
-        >
-          {t('viewAll')} →
-        </Link>
+        <ArrowLink href={`/${locale}/work`} className="hidden md:inline-flex text-sm text-muted">
+          {t('viewAll')}
+        </ArrowLink>
       </div>
 
       <div className="flex flex-col gap-6">
@@ -30,12 +29,9 @@ export default function FeaturedWork() {
       </div>
 
       <div className="mt-12 md:hidden">
-        <Link
-          href={`/${locale}/work`}
-          className="text-sm text-muted hover:text-foreground transition-colors"
-        >
-          {t('viewAll')} →
-        </Link>
+        <ArrowLink href={`/${locale}/work`} className="text-sm text-muted">
+          {t('viewAll')}
+        </ArrowLink>
       </div>
     </section>
   );
@@ -104,9 +100,13 @@ function ProjectRow({
               </p>
             </div>
 
-            <div className="flex items-center gap-2 mt-8 text-sm font-sans text-foreground">
-              <span className="group-hover:mr-2 transition-all duration-300">{t('viewCase')}</span>
-              <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+            <div className="flex items-center gap-2 mt-8 text-sm font-sans text-foreground group-hover:text-accent transition-colors duration-300">
+              <span>{t('viewCase')}</span>
+              <ArrowRight
+                aria-hidden="true"
+                strokeWidth={2}
+                className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300 ease-out-expo"
+              />
             </div>
           </div>
         </div>

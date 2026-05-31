@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ArrowRight } from 'lucide-react';
 import { getProjectBySlug, projects } from '@/lib/projects';
 import { getReadableTextColor } from '@/lib/utils';
 import CaseStudyContent from './CaseStudyContent';
@@ -119,7 +120,11 @@ export default async function CaseStudyPage({
               {nextProject.title}
             </h3>
           </div>
-          <span className="text-3xl group-hover:translate-x-2 transition-transform duration-300">→</span>
+          <ArrowRight
+            aria-hidden="true"
+            strokeWidth={1.5}
+            className="w-7 h-7 shrink-0 group-hover:translate-x-2 transition-transform duration-300 ease-out-expo group-hover:text-accent"
+          />
         </Link>
       </div>
     </article>

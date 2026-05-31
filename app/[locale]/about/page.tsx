@@ -1,4 +1,6 @@
 import { getTranslations } from 'next-intl/server';
+import { ArrowDown } from 'lucide-react';
+import Reveal from '@/components/ui/Reveal';
 
 const tools = [
   'Figma', 'FigJam', 'Framer', 'ProtoPie',
@@ -36,7 +38,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   return (
     <div className="pt-32 pb-24 max-w-6xl mx-auto px-6">
       {/* Header */}
-      <div className="mb-24 grid md:grid-cols-2 gap-16 items-start">
+      <Reveal className="mb-24 grid md:grid-cols-2 gap-16 items-start">
         <div className="min-w-0">
           <p className="text-xs text-muted uppercase tracking-widest font-sans mb-4">{t('title')}</p>
           <h1 className="font-display font-800 text-5xl md:text-6xl tracking-tight leading-none mb-8 break-words overflow-hidden">
@@ -47,9 +49,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <a
             href="/case-studies/cv.pdf"
             download
-            className="inline-flex items-center gap-2 border border-foreground px-5 py-2.5 text-sm font-sans hover:bg-foreground hover:text-background transition-all duration-300"
+            className="group inline-flex items-center gap-2 border border-foreground px-5 py-2.5 text-sm font-sans hover:bg-foreground hover:text-background transition-all duration-300"
           >
-            {t('downloadCV')} ↓
+            {t('downloadCV')}
+            <ArrowDown
+              aria-hidden="true"
+              strokeWidth={2}
+              className="w-4 h-4 transition-transform duration-300 ease-out-expo group-hover:translate-y-0.5"
+            />
           </a>
         </div>
 
@@ -57,10 +64,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <p className="font-sans text-lg leading-relaxed">{t('bio1')}</p>
           <p className="font-sans text-muted leading-relaxed">{t('bio2')}</p>
         </div>
-      </div>
+      </Reveal>
 
       {/* Philosophy */}
-      <div className="mb-24">
+      <Reveal className="mb-24">
         <p className="text-xs text-muted uppercase tracking-widest font-sans mb-8">{t('philosophy')}</p>
         <div className="grid md:grid-cols-3 gap-0 border border-border">
           {principles.map(({ title, body }, i) => (
@@ -71,10 +78,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </div>
           ))}
         </div>
-      </div>
+      </Reveal>
 
       {/* Tools */}
-      <div className="mb-24">
+      <Reveal className="mb-24">
         <p className="text-xs text-muted uppercase tracking-widest font-sans mb-8">{t('tools')}</p>
         <div className="flex flex-wrap gap-3">
           {tools.map((tool) => (
@@ -83,10 +90,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </span>
           ))}
         </div>
-      </div>
+      </Reveal>
 
       {/* Experience */}
-      <div>
+      <Reveal>
         <p className="text-xs text-muted uppercase tracking-widest font-sans mb-8">{t('experience')}</p>
         <div className="space-y-0 border border-border">
           {experience.map(({ year, role, company }, i) => (
@@ -100,7 +107,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </div>
           ))}
         </div>
-      </div>
+      </Reveal>
     </div>
   );
 }

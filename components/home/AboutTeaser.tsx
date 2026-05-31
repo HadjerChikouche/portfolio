@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
+import ArrowLink from '@/components/ui/ArrowLink';
 
 export default function AboutTeaser() {
   const t = useTranslations('about');
@@ -47,13 +47,9 @@ export default function AboutTeaser() {
             ))}
           </div>
 
-          <Link
-            href={`/${locale}/about`}
-            className="group self-start inline-flex items-center gap-2 text-sm font-sans hover:text-accent transition-colors"
-          >
+          <ArrowLink href={`/${locale}/about`} className="self-start text-sm">
             {t('cta')}
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </Link>
+          </ArrowLink>
         </motion.div>
       </div>
     </section>

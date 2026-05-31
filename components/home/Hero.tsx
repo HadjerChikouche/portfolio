@@ -3,6 +3,7 @@
 import { motion, Variants } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -78,7 +79,11 @@ export default function Hero() {
             className="group inline-flex items-center gap-3 border border-foreground px-6 py-3 font-sans text-sm tracking-wide hover:bg-foreground hover:text-background transition-all duration-300"
           >
             {tf('title')}
-            <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+            <ArrowRight
+              aria-hidden="true"
+              strokeWidth={2}
+              className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300 ease-out-expo"
+            />
           </Link>
         </motion.div>
       </div>

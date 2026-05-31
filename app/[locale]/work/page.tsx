@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { projects } from '@/lib/projects';
 import WorkGrid from './WorkGrid';
+import Availability from '@/components/ui/Availability';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -16,8 +17,6 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'work' });
   const tn = await getTranslations({ locale, namespace: 'nav' });
-
-  const yearRange = '2022 — 2024';
 
   return (
     <div className="pt-32 pb-24 max-w-6xl mx-auto px-6">
@@ -34,16 +33,7 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
         </div>
 
         <div className="lg:col-span-4 flex flex-col gap-3 lg:items-end lg:text-right">
-          <span className="inline-flex items-center gap-2 text-sm font-sans text-foreground">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-60 motion-safe:animate-ping" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
-            </span>
-            {tn('available')}
-          </span>
-          <span className="font-display font-700 text-2xl tracking-tight tabular-nums">
-            {yearRange}
-          </span>
+          <Availability label={tn('available')} className="text-sm font-sans text-foreground" />
         </div>
       </header>
 
