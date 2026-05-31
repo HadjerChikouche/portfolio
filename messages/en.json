@@ -64,7 +64,8 @@
     "tools": "Tools",
     "platform": "Platform",
     "count": "projects",
-    "nextProject": "Next project"
+    "nextProject": "Next project",
+    "ctaTitle": "Have a project in mind?"
   },
   "contact": {
     "title": "Let's talk",

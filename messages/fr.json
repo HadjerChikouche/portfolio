@@ -64,7 +64,8 @@
     "tools": "Outils",
     "platform": "Plateforme",
     "count": "projets",
-    "nextProject": "Projet suivant"
+    "nextProject": "Projet suivant",
+    "ctaTitle": "Un projet en tête ?"
   },
   "contact": {
     "title": "Parlons-en",

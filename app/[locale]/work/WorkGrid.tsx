@@ -31,7 +31,11 @@ export default function WorkGrid({ projects }: { projects: Project[] }) {
   return (
     <div>
       {/* Filters — only show categories that actually have projects */}
-      <div className="flex flex-wrap gap-2 mb-12" role="group" aria-label={ta('workFilters')}>
+      <div
+        className="flex flex-wrap gap-2 mb-16 pb-8 border-b border-border"
+        role="group"
+        aria-label={ta('workFilters')}
+      >
         {ALL_TYPES.filter((type) => countFor(type) > 0).map((type) => (
           <button
             key={type}
@@ -39,22 +43,27 @@ export default function WorkGrid({ projects }: { projects: Project[] }) {
             onClick={() => setActive(type)}
             aria-pressed={active === type}
             className={cn(
-              'text-xs font-sans px-3 py-1.5 border transition-all duration-200',
+              'group/filter inline-flex items-center gap-1.5 text-xs font-sans rounded-full px-4 py-2 border transition-all duration-200',
               active === type
                 ? 'border-foreground bg-foreground text-background'
                 : 'border-border text-muted hover:border-foreground hover:text-foreground'
             )}
           >
             {labelMap[type]}
-            <span className={cn('ml-1.5', active === type ? 'opacity-60' : 'opacity-50')}>
+            <span
+              className={cn(
+                'tabular-nums text-[0.65rem] rounded-full px-1.5 py-px',
+                active === type ? 'bg-background/20' : 'bg-foreground/[0.04] group-hover/filter:bg-foreground/[0.08]'
+              )}
+            >
               {countFor(type)}
             </span>
           </button>
         ))}
       </div>
 
-      {/* Grid */}
-      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      {/* Grid — 2-up editorial layout gives each project real weight */}
+      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-16">
         <AnimatePresence mode="popLayout">
           {filtered.map((project, i) => (
             <motion.div

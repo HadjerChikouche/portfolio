@@ -161,7 +161,7 @@ export default async function CaseStudyContent({ slug, locale, description }: Pr
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 py-16">
+    <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 py-16">
       <div className="prose prose-lg prose-neutral dark:prose-invert max-w-none prose-headings:font-display prose-headings:font-700 prose-headings:tracking-tight prose-headings:text-foreground prose-p:text-muted prose-p:leading-relaxed prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:mt-20 prose-h2:mb-6 prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-12 prose-h3:mb-4 prose-strong:text-foreground prose-li:text-muted prose-li:leading-relaxed prose-hr:border-border">
         <MDXRemote
           source={source}
