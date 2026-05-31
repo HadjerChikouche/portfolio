@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useLocale } from 'next-intl';
 import { Project } from '@/lib/projects';
@@ -21,11 +22,20 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
       transition={{ duration: 0.6, delay: (index % 3) * 0.08, ease: [0.16, 1, 0.3, 1] }}
     >
       <Link href={`/${locale}/work/${project.slug}`} className="group block">
-        {/* Color block */}
+        {/* Thumbnail */}
         <div
-          className="w-full aspect-[4/3] mb-5 overflow-hidden transition-transform duration-700 group-hover:scale-[1.02]"
+          className="w-full aspect-[4/3] mb-5 overflow-hidden transition-transform duration-700 group-hover:scale-[1.02] relative"
           style={{ backgroundColor: project.coverColor }}
-        />
+        >
+          {project.coverImage && (
+            project.coverImage.endsWith('.svg') ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={project.coverImage} alt={project.title} className="absolute inset-0 w-full h-full object-cover object-center" />
+            ) : (
+              <Image src={project.coverImage} alt={project.title} fill className="object-cover object-center" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
+            )
+          )}
+        </div>
 
         {/* Meta */}
         <div className="flex items-start justify-between mb-2">

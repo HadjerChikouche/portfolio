@@ -6,9 +6,10 @@ export interface Project {
   year: number;
   featured: boolean;
   coverColor: string;
+  coverImage?: string;
   description: { en: string; fr: string };
   role: { en: string; fr: string };
-  duration: string;
+  duration: { en: string; fr: string };
   tools: string[];
   platform: string;
 }
@@ -30,7 +31,7 @@ export const projects: Project[] = [
       fr: 'Un SaaS fret temps réel — 6 state machines, 6 patterns d\'interaction, un design system domain-driven construit à partir des contraintes système distribuées.',
     },
     role: { en: 'Product Designer', fr: 'Product Designer' },
-    duration: '6 months',
+    duration: { en: '6 months', fr: '6 mois' },
     tools: ['Figma', 'FigJam', 'Notion'],
     platform: 'Web App (B2B SaaS)',
   },
@@ -42,17 +43,18 @@ export const projects: Project[] = [
       fr: 'Plateforme d\'opérations média assistée par IA',
     },
     type: ['UX Research', 'Product Design'],
-    year: 2025,
+    year: 2024,
     featured: true,
     coverColor: '#111111',
+    coverImage: '/images/ocus/cover.svg',
     description: {
       en: 'Designing AI Image Enhancement for OCUS — an internal media ops platform that shifts QA from universal review to exception-based routing at 10,000-image scale.',
       fr: 'Conception de l\'amélioration d\'image IA pour OCUS — une plateforme d\'opérations média qui fait passer le QA d\'une revue universelle à un routage par exceptions à 10 000 images.',
     },
     role: { en: 'UX/UI Designer', fr: 'UX/UI Designer' },
-    duration: '3 months',
+    duration: { en: '3 months', fr: '3 mois' },
     tools: ['Figma', 'Maze', 'Notion'],
-    platform: 'Web',
+    platform: 'Web App',
   },
 ];
 

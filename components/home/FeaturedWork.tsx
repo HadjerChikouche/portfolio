@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import { getFeaturedProjects } from '@/lib/projects';
@@ -60,11 +61,20 @@ function ProjectRow({
     >
       <Link href={`/${locale}/work/${project.slug}`} className="group block">
         <div className="flex flex-col md:flex-row gap-0 border border-border hover:border-foreground transition-colors duration-300 overflow-hidden">
-          {/* Color block */}
+          {/* Thumbnail */}
           <div
-            className="w-full md:w-64 h-48 md:h-auto shrink-0 transition-transform duration-700 group-hover:scale-[1.02]"
+            className="w-full md:w-64 h-48 md:h-auto shrink-0 transition-transform duration-700 group-hover:scale-[1.02] relative overflow-hidden"
             style={{ backgroundColor: project.coverColor }}
-          />
+          >
+            {project.coverImage && (
+              project.coverImage.endsWith('.svg') ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={project.coverImage} alt={project.title} className="absolute inset-0 w-full h-full object-cover object-center" />
+              ) : (
+                <Image src={project.coverImage} alt={project.title} fill className="object-cover object-center" sizes="(max-width: 768px) 100vw, 256px" />
+              )
+            )}
+          </div>
 
           {/* Content */}
           <div className="flex-1 p-8 md:p-10 flex flex-col justify-between">
