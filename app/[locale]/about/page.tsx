@@ -7,9 +7,12 @@ const tools = [
 ];
 
 const experience = [
-  { year: '2024 – Present', role: 'Product Designer', company: 'FlexFret' },
-  { year: '2023 – 2024', role: 'UX/UI Designer', company: 'OCUS' },
-  { year: '2022 – 2023', role: 'UX Designer', company: 'Freelance' },
+  { year: 'Oct 2025 – Present', role: 'Product Owner', company: 'Spuerkeess' },
+  { year: 'Dec 2024 – Sep 2025', role: 'IT Consultant', company: 'Abylsen' },
+  { year: 'Oct 2023 – Jun 2024', role: 'UX Researcher & UX Designer', company: 'FlexFret' },
+  { year: 'Mar 2023 – Jun 2023', role: 'Product Designer', company: 'Candide' },
+  { year: 'Jan 2022 – Sep 2023', role: 'UX Researcher & UX Designer', company: 'Ocus' },
+  { year: 'Sep 2019 – Sep 2020', role: 'DevOps Engineer', company: 'EDF' },
 ];
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
