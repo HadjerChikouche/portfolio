@@ -1,28 +1,26 @@
 'use client';
 
-import { useRef } from 'react';
 import Link from 'next/link';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 
 export default function AboutTeaser() {
   const t = useTranslations('about');
   const locale = useLocale();
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
 
   const stats = [
-    { n: '5+', label: t('stats.experience') },
+    { n: '4+', label: t('stats.experience') },
     { n: '20+', label: t('stats.projects') },
     { n: '3', label: t('stats.industries') },
   ];
 
   return (
-    <section ref={ref} className="border-t border-border">
+    <section className="border-t border-border">
       <div className="max-w-6xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, x: -24 }}
-          animate={inView ? { opacity: 1, x: 0 } : {}}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           <p className="text-xs text-muted uppercase tracking-widest font-sans mb-6">
@@ -35,7 +33,8 @@ export default function AboutTeaser() {
 
         <motion.div
           initial={{ opacity: 0, x: 24 }}
-          animate={inView ? { opacity: 1, x: 0 } : {}}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col gap-8"
         >
