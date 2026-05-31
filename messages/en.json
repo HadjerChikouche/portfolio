@@ -95,5 +95,24 @@
   "footer": {
     "rights": "All rights reserved.",
     "designed": "Designed & built by Hadjer Chikouche"
+  },
+  "studio": {
+    "open": "Open design studio",
+    "close": "Close design studio",
+    "title": "Design studio",
+    "subtitle": "A live look at the system behind this site.",
+    "blueprint": "Blueprint",
+    "showGrid": "Show grid",
+    "accent": "Accent",
+    "theme": "Theme",
+    "theme_system": "System",
+    "theme_paper": "Paper",
+    "theme_ink": "Ink",
+    "scale": "Base scale",
+    "reset": "Reset",
+    "hint": "Press G to toggle the grid anywhere.",
+    "columns": "columns",
+    "gutter": "gutter",
+    "typeScale": "Type scale"
   }
 }

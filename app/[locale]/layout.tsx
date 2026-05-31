@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import CustomCursor from '@/components/ui/CustomCursor';
 import PageTransition from '@/components/layout/PageTransition';
 import MotionProvider from '@/components/layout/MotionProvider';
+import DesignStudio from '@/components/studio/DesignStudio';
 
 const syne = Syne({
   subsets: ['latin'],
@@ -57,6 +58,7 @@ export default async function LocaleLayout({
               </main>
             </PageTransition>
             <Footer />
+            <DesignStudio />
           </MotionProvider>
         </NextIntlClientProvider>
       </body>

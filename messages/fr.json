@@ -95,5 +95,24 @@
   "footer": {
     "rights": "Tous droits réservés.",
     "designed": "Conçu & développé par Hadjer Chikouche"
+  },
+  "studio": {
+    "open": "Ouvrir le studio design",
+    "close": "Fermer le studio design",
+    "title": "Studio design",
+    "subtitle": "Un aperçu en direct du système derrière ce site.",
+    "blueprint": "Plan",
+    "showGrid": "Afficher la grille",
+    "accent": "Accent",
+    "theme": "Thème",
+    "theme_system": "Système",
+    "theme_paper": "Papier",
+    "theme_ink": "Encre",
+    "scale": "Échelle de base",
+    "reset": "Réinitialiser",
+    "hint": "Appuyez sur G pour afficher la grille partout.",
+    "columns": "colonnes",
+    "gutter": "gouttière",
+    "typeScale": "Échelle typographique"
   }
 }
