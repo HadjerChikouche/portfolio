@@ -26,6 +26,7 @@ export const projects: Project[] = [
     year: 2026,
     featured: true,
     coverColor: '#1A1A2E',
+    coverImage: '/images/flexfret/cover.svg',
     description: {
       en: 'A real-time freight SaaS — 6 state machines, 6 interaction patterns, a domain-driven design system built from distributed system constraints, not visual preferences.',
       fr: 'Un SaaS fret temps réel — 6 state machines, 6 patterns d\'interaction, un design system domain-driven construit à partir des contraintes système distribuées.',

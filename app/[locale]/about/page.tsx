@@ -37,9 +37,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     <div className="pt-32 pb-24 max-w-6xl mx-auto px-6">
       {/* Header */}
       <div className="mb-24 grid md:grid-cols-2 gap-16 items-start">
-        <div>
+        <div className="min-w-0">
           <p className="text-xs text-muted uppercase tracking-widest font-sans mb-4">{t('title')}</p>
-          <h1 className="font-display font-800 text-5xl md:text-7xl tracking-tight leading-none mb-8">
+          <h1 className="font-display font-800 text-5xl md:text-6xl tracking-tight leading-none mb-8 break-words overflow-hidden">
             Hadjer
             <br />
             Chikouche
@@ -53,7 +53,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </a>
         </div>
 
-        <div className="space-y-6 pt-4">
+        <div className="min-w-0 space-y-6 pt-4">
           <p className="font-sans text-lg leading-relaxed">{t('bio1')}</p>
           <p className="font-sans text-muted leading-relaxed">{t('bio2')}</p>
         </div>
