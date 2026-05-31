@@ -10,7 +10,7 @@ export default function AboutTeaser() {
 
   const stats = [
     { n: '4+', label: t('stats.experience') },
-    { n: '20+', label: t('stats.projects') },
+    { n: '5+', label: t('stats.projects') },
     { n: '3', label: t('stats.industries') },
   ];
 
