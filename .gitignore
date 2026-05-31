@@ -23,6 +23,8 @@
 # large source PDFs (working copies / unused downloads) — keep out of git history
 /*.pdf
 /public/case-studies/*.pdf
+# …except the CV, which the About page links for download and must deploy
+!/public/case-studies/cv.pdf
 
 # debug
 npm-debug.log*
