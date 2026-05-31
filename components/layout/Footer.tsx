@@ -4,6 +4,7 @@ import Link from 'next/link';
 export default function Footer() {
   const t = useTranslations('footer');
   const tNav = useTranslations('nav');
+  const ta = useTranslations('a11y');
   const locale = useLocale();
 
   return (
@@ -14,7 +15,7 @@ export default function Footer() {
           <p className="text-xs text-muted">{t('designed')}</p>
         </div>
 
-        <nav className="flex flex-wrap gap-6 text-sm text-muted">
+        <nav className="flex flex-wrap gap-6 text-sm text-muted" aria-label={ta('footerNav')}>
           <Link href={`/${locale}/work`} className="hover:text-foreground transition-colors">
             {tNav('work')}
           </Link>

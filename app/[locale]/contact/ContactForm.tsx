@@ -44,7 +44,9 @@ export default function ContactForm() {
   };
 
   const inputClass = cn(
-    'w-full border border-border bg-transparent px-4 py-3 text-sm font-sans placeholder:text-muted focus:outline-none focus:border-foreground transition-colors'
+    // RGAA 10.7 — keep a clearly visible focus state: darken the border AND
+    // add an accent ring so the active field is unmistakable for keyboard users.
+    'w-full border border-border bg-transparent px-4 py-3 text-sm font-sans placeholder:text-muted focus:outline-none focus:border-foreground focus:ring-2 focus:ring-accent/40 transition-colors'
   );
 
   if (status === 'success') {
@@ -66,6 +68,7 @@ export default function ContactForm() {
           id="contact-name"
           {...register('name')}
           placeholder={t('placeholder.name')}
+          aria-required="true"
           aria-invalid={errors.name ? 'true' : 'false'}
           aria-describedby={errors.name ? 'contact-name-error' : undefined}
           className={cn(inputClass, errors.name && 'border-red-400')}
@@ -86,6 +89,7 @@ export default function ContactForm() {
           {...register('email')}
           type="email"
           placeholder={t('placeholder.email')}
+          aria-required="true"
           aria-invalid={errors.email ? 'true' : 'false'}
           aria-describedby={errors.email ? 'contact-email-error' : undefined}
           className={cn(inputClass, errors.email && 'border-red-400')}
@@ -106,6 +110,7 @@ export default function ContactForm() {
           {...register('message')}
           rows={6}
           placeholder={t('placeholder.message')}
+          aria-required="true"
           aria-invalid={errors.message ? 'true' : 'false'}
           aria-describedby={errors.message ? 'contact-message-error' : undefined}
           className={cn(inputClass, 'resize-none', errors.message && 'border-red-400')}

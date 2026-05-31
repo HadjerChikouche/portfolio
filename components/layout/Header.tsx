@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 
 export default function Header() {
   const t = useTranslations('nav');
+  const ta = useTranslations('a11y');
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
@@ -43,9 +44,10 @@ export default function Header() {
         scrolled ? 'bg-background/90 backdrop-blur-md border-b border-border' : 'bg-transparent'
       )}
     >
-      <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label={ta('mainNav')}>
         <Link
           href={localizedHref('')}
+          aria-label={ta('home')}
           className="font-display font-700 text-sm tracking-widest uppercase hover:text-accent transition-colors"
         >
           HC
@@ -57,6 +59,7 @@ export default function Header() {
             <li key={href}>
               <Link
                 href={href}
+                aria-current={pathname === href ? 'page' : undefined}
                 className={cn(
                   'text-sm font-sans tracking-wide transition-colors hover:text-accent',
                   pathname === href ? 'text-foreground' : 'text-muted'
@@ -68,20 +71,24 @@ export default function Header() {
           ))}
           <li>
             <button
+              type="button"
               onClick={switchLocale}
+              aria-label={ta('switchLanguage')}
               className="text-xs font-sans text-muted hover:text-foreground transition-colors tracking-widest uppercase border border-border px-2 py-1"
             >
-              {otherLocale}
+              <span lang={otherLocale}>{otherLocale}</span>
             </button>
           </li>
         </ul>
 
         {/* Mobile menu button */}
         <button
+          type="button"
           className="md:hidden flex flex-col gap-1.5 p-1"
           onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
+          aria-label={menuOpen ? ta('closeMenu') : ta('openMenu')}
           aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
         >
           <span className={cn('w-6 h-px bg-foreground transition-all duration-300', menuOpen && 'rotate-45 translate-y-2')} />
           <span className={cn('w-6 h-px bg-foreground transition-all duration-300', menuOpen && 'opacity-0')} />
@@ -93,6 +100,7 @@ export default function Header() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -104,6 +112,7 @@ export default function Header() {
                 <li key={href}>
                   <Link
                     href={href}
+                    aria-current={pathname === href ? 'page' : undefined}
                     onClick={() => setMenuOpen(false)}
                     className="text-2xl font-display font-600 hover:text-accent transition-colors"
                   >
@@ -113,10 +122,12 @@ export default function Header() {
               ))}
               <li>
                 <button
+                  type="button"
                   onClick={switchLocale}
+                  aria-label={ta('switchLanguage')}
                   className="text-sm text-muted hover:text-foreground transition-colors uppercase tracking-widest"
                 >
-                  {otherLocale === 'fr' ? 'Français' : 'English'}
+                  <span lang={otherLocale}>{otherLocale === 'fr' ? 'Français' : 'English'}</span>
                 </button>
               </li>
             </ul>

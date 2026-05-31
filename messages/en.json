@@ -1,4 +1,14 @@
 {
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "home": "Hadjer Chikouche — home",
+    "mainNav": "Main navigation",
+    "footerNav": "Footer navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "switchLanguage": "Switch to French",
+    "workFilters": "Filter projects by type"
+  },
   "nav": {
     "work": "Work",
     "about": "About",

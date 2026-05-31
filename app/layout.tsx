@@ -1,19 +1,5 @@
 import type { Metadata } from 'next';
-import { Syne, Inter } from 'next/font/google';
 import './globals.css';
-
-const syne = Syne({
-  subsets: ['latin'],
-  variable: '--font-syne',
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-});
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'Hadjer Chikouche — UX/UI & Product Designer',
@@ -26,10 +12,9 @@ export const metadata: Metadata = {
   },
 };
 
+// The <html> / <body> tags live in app/[locale]/layout.tsx so the lang
+// attribute can reflect the active locale (RGAA 8.3 — langue de la page).
+// This root layout intentionally only passes children through.
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html className={`${syne.variable} ${inter.variable}`} suppressHydrationWarning>
-      <body>{children}</body>
-    </html>
-  );
+  return children;
 }

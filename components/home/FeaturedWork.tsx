@@ -68,10 +68,11 @@ function ProjectRow({
           >
             {project.coverImage && (
               project.coverImage.endsWith('.svg') ? (
+                // Decorative — the title is rendered as adjacent text inside the same link.
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={project.coverImage} alt={project.title} className="absolute inset-0 w-full h-full object-cover object-center" />
+                <img src={project.coverImage} alt="" className="absolute inset-0 w-full h-full object-cover object-center" />
               ) : (
-                <Image src={project.coverImage} alt={project.title} fill className="object-cover object-center" sizes="(max-width: 768px) 100vw, 256px" />
+                <Image src={project.coverImage} alt="" fill className="object-cover object-center" sizes="(max-width: 768px) 100vw, 256px" />
               )
             )}
           </div>

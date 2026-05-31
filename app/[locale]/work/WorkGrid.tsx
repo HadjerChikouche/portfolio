@@ -11,6 +11,7 @@ const ALL_TYPES = ['All', 'Product Design', 'UX Research', 'Design System', 'Mob
 
 export default function WorkGrid({ projects }: { projects: Project[] }) {
   const t = useTranslations('work.filter');
+  const ta = useTranslations('a11y');
   const [active, setActive] = useState('All');
 
   const filtered = active === 'All' ? projects : projects.filter((p) => p.type.includes(active));
@@ -30,11 +31,13 @@ export default function WorkGrid({ projects }: { projects: Project[] }) {
   return (
     <div>
       {/* Filters — only show categories that actually have projects */}
-      <div className="flex flex-wrap gap-2 mb-12">
+      <div className="flex flex-wrap gap-2 mb-12" role="group" aria-label={ta('workFilters')}>
         {ALL_TYPES.filter((type) => countFor(type) > 0).map((type) => (
           <button
             key={type}
+            type="button"
             onClick={() => setActive(type)}
+            aria-pressed={active === type}
             className={cn(
               'text-xs font-sans px-3 py-1.5 border transition-all duration-200',
               active === type

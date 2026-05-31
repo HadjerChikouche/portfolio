@@ -53,10 +53,11 @@ export default async function CaseStudyPage({
       >
         {project.coverImage && (
           project.coverImage.endsWith('.svg') ? (
+            // Decorative hero backdrop — the project title is the h1 overlaid on top.
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={project.coverImage} alt={project.title} className="absolute inset-0 w-full h-full object-cover object-center" />
+            <img src={project.coverImage} alt="" className="absolute inset-0 w-full h-full object-cover object-center" />
           ) : (
-            <Image src={project.coverImage} alt={project.title} fill className="object-cover object-center" priority sizes="100vw" />
+            <Image src={project.coverImage} alt="" fill className="object-cover object-center" priority sizes="100vw" />
           )
         )}
         {/* gradient so the text reads cleanly over the image */}

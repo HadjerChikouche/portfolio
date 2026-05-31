@@ -1,4 +1,14 @@
 {
+  "a11y": {
+    "skipToContent": "Aller au contenu principal",
+    "home": "Hadjer Chikouche — accueil",
+    "mainNav": "Navigation principale",
+    "footerNav": "Navigation de pied de page",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "switchLanguage": "Passer en anglais",
+    "workFilters": "Filtrer les projets par type"
+  },
   "nav": {
     "work": "Projets",
     "about": "À propos",

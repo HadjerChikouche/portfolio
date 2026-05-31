@@ -29,10 +29,12 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         >
           {project.coverImage && (
             project.coverImage.endsWith('.svg') ? (
+              // Decorative — the project title sits right below as real text, so an
+              // alt here would be announced twice. Empty alt keeps it out of the a11y tree.
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={project.coverImage} alt={project.title} className="absolute inset-0 w-full h-full object-cover object-center" />
+              <img src={project.coverImage} alt="" className="absolute inset-0 w-full h-full object-cover object-center" />
             ) : (
-              <Image src={project.coverImage} alt={project.title} fill className="object-cover object-center" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
+              <Image src={project.coverImage} alt="" fill className="object-cover object-center" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
             )
           )}
         </div>
