@@ -9,7 +9,7 @@
 **What I delivered.**
 
 - **Design system:** 6 families of state primitives and 6 components (Offer Card, Timeline, Assignment Panel, Exception Banner, Status Badges, Data Table)
-- **3 product screens:** Offer Inbox, Shipment Tracking, Matching Workbench
+- **All product screens** across the driver and dispatcher workflows, from offer to delivery
 - **Specs for developers:** 6 state machines and 6 interaction patterns
 
 ---
@@ -64,11 +64,11 @@ The key principle: every component is a read model projection. It can only be in
 
 ---
 
-## The Three Product Interfaces
+## Key Screens
 
-Each screen is the visual projection of a backend state machine, rendered through the component system.
+I designed every screen across the driver and dispatcher workflows. Three of them are shown here. Each screen is the visual projection of a backend state machine, rendered through the component system.
 
-<CaseImage src="/images/flexfret/ui-three-screens.png" alt="FlexFret — three main product interfaces: Driver Offer Inbox, Driver Shipment Tracking, Dispatcher Matching Workbench" caption="Driver — Offer Inbox · Driver — Shipment Tracking · Dispatcher — Matching Workbench" />
+<CaseImage src="/images/flexfret/ui-three-screens.png" alt="FlexFret — three example screens: Driver Offer Inbox, Driver Shipment Tracking, Dispatcher Matching Workbench" caption="Driver — Offer Inbox · Driver — Shipment Tracking · Dispatcher — Matching Workbench" />
 
 **Offer Inbox (driver)** — Real-time offer list with per-offer state: open, pending confirmation, accepted, expired, rejected. A countdown triggers visual state transitions. Acceptance is optimistic, with rollback on conflict.
 
