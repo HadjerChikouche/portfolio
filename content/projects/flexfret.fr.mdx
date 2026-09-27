@@ -1,8 +1,26 @@
+## En bref
+
+**Contexte.** Projet client : une plateforme de fret temps réel qui relie dispatchers, transporteurs et chauffeurs. Le travail a été transmis au client à la fin de ma mission.
+
+**Mon rôle.** UX Researcher et UX Designer : j'ai analysé les comportements et les usages par des approches qualitatives et quantitatives, identifié des opportunités d'amélioration, traduit celles-ci en éléments de backlog actionnables, et conçu des workflows clairs et structurés, alignés sur les exigences business du client.
+
+**Équipe.** Product Owner, Product Manager, développeurs et 2 designers.
+
+**Livrables.** Trois interfaces produit, un design system domain-driven, six state machines formelles et six patterns d'interaction spécifiés pour l'équipe engineering.
+
+---
+
 ## Vue d'ensemble
 
-FlexFret est une plateforme de logistique de fret en temps réel connectant dispatchers, transporteurs et chauffeurs sur des opérations d'expédition en direct. J'ai conçu le produit à partir des premiers principes — pas comme une suite d'écrans, mais comme une interface dérivée directement du système distribué sous-jacent.
+FlexFret est une plateforme logistique de fret en temps réel. Dispatchers, transporteurs et chauffeurs agissent en même temps sur les mêmes expéditions en cours.
 
-Le résultat : un design system, six state machines et six patterns d'interaction qui rendent un système fondamentalement non fiable fiable à l'usage.
+L'approche de design : dériver l'interface du système distribué sous-jacent, plutôt que d'une suite d'écrans. Le résultat est un design system, six state machines et six patterns d'interaction qui rendent un système peu fiable lisible et prévisible pour ceux qui l'utilisent.
+
+---
+
+## Recherche et Travail Produit
+
+Avant de concevoir, j'ai analysé l'usage de la plateforme — par des approches qualitatives et quantitatives — pour repérer où les workflows cassaient. Chaque opportunité d'amélioration est devenue un élément de backlog actionnable, que j'ai ensuite conçu en fonction des exigences business du client.
 
 ---
 
@@ -10,21 +28,19 @@ Le résultat : un design system, six state machines et six patterns d'interactio
 
 ### Les plateformes logistiques ne sont pas de simples interfaces. Ce sont des systèmes distribués.
 
-Chaque plateforme logistique est un système distribué — une source de vérité unique que plusieurs acteurs lisent et écrivent simultanément, avec la latence, les pannes et les race conditions comme contraintes de premier ordre.
+Une plateforme logistique est une source de vérité unique que plusieurs acteurs lisent et modifient en même temps. Latence, échecs et conditions de concurrence y sont des préoccupations de premier ordre, pas des cas limites.
 
-L'UI existante était conçue comme si c'était un visualiseur de base de données : montrer les données, laisser les utilisateurs les éditer. Mais dans un contexte logistique temps réel, cette hypothèse s'effondrait en permanence.
+### Quatre contraintes qui pilotent chaque décision UX
 
-### Quatre problèmes système distribué qui pilotent chaque décision UX
+**Conditions de concurrence** — Un chauffeur accepte une offre. La confirmation n'est pas instantanée, et un autre chauffeur a pu accepter au même moment. L'UI doit refléter chaque issue possible — acceptée, rejetée, conflit — sans perdre l'utilisateur.
 
-**Race Conditions** — Un chauffeur accepte une offre. Le système prend 200–800ms pour confirmer. Un autre chauffeur a peut-être accepté simultanément. L'UI doit refléter les trois résultats possibles sans confondre l'utilisateur.
+**Latence** — Les commandes mettent du temps à être confirmées, surtout sur réseau mobile. Sans UI optimiste, chaque tap donne l'impression d'être cassé.
 
-**Latence** — Commandes prenant 200–800ms à confirmer. Sur les réseaux mobiles en zone rurale, les aller-retours de commandes peuvent prendre 2–5 secondes. Sans UI optimiste, chaque tap paraît cassé.
+**Échecs** — Les échecs sont de deux types : transitoires (timeout réseau, surcharge serveur) et permanents (rejet par une règle métier). Chacun demande une posture d'UI différente.
 
-**Pannes** — Les erreurs d'assignation effacent l'état système. Les pannes sont de deux types : transitoires (timeout réseau, surcharge serveur) et permanentes (violation de règle métier). Chacune requiert une posture UI différente.
+**Données périmées** — Ce que voit un dispatcher ou un chauffeur peut déjà être dépassé. Ce n'est pas un bug, c'est la nature d'un système distribué. L'UX doit dire à quel point les données sont fraîches.
 
-**Données périmées** — Un dispatcher consulte une assignation mise à jour il y a 4 minutes. Un chauffeur est à 30km de là où la carte le montre. Ce n'est pas un bug — c'est la nature des systèmes distribués. L'UX doit le communiquer clairement.
-
-<Callout>L'UX n'est pas une couche au-dessus du système. Elle en est directement dérivée.</Callout>
+<Callout>L'UX n'est pas une couche posée sur le système. Elle en est directement dérivée.</Callout>
 
 ---
 
@@ -40,21 +56,21 @@ L'UI FlexFret est construite directement à partir des concepts du Domain-Driven
 | Aggregate | Frontière de cohérence | Portée / isolation du composant | Agrégat Offre → composant Carte Offre |
 | Bounded Context | Frontière de domaine | Vue acteur / domaine d'écran | Contexte Chauffeur → écran Boîte de réception Offres |
 
-Le principe clé : chaque composant FlexFret est une projection directe de read model. Il ne peut être que dans les états que le flux d'événements backend autorise. Le design system n'est pas une bibliothèque visuelle — c'est une expression UX du modèle de domaine.
+Le principe clé : chaque composant est une projection de read model. Il ne peut être que dans les états que le flux d'événements backend autorise. Le design system n'est pas une bibliothèque visuelle — c'est une expression UX du modèle de domaine.
 
 ---
 
 ## Les Trois Interfaces Produit
 
-Chaque écran est un read model. Chaque état est intentionnel. Ce ne sont pas des maquettes construites en isolation — chaque écran est la projection visuelle d'une state machine backend, rendue via le système de composants.
+Chaque écran est la projection visuelle d'une state machine backend, rendue à travers le système de composants.
 
 <CaseImage src="/images/flexfret/ui-three-screens.png" alt="FlexFret — trois interfaces produit principales : Boîte de réception Offres Chauffeur, Suivi Expédition Chauffeur, Poste de travail Matching Dispatcher" caption="Chauffeur — Boîte de réception Offres · Chauffeur — Suivi Expédition · Dispatcher — Poste de Matching" />
 
-**Boîte de réception Offres** — Liste d'offres temps réel avec état par offre (ouverte, expirée, confirmation en attente). Le compte à rebours déclenche des transitions d'état visuelles. Acceptation optimiste avec rollback en cas de conflit.
+**Boîte de réception Offres (chauffeur)** — Liste d'offres en temps réel avec un état par offre : ouverte, en attente de confirmation, acceptée, expirée, rejetée. Un compte à rebours déclenche les transitions visuelles. L'acceptation est optimiste, avec retour en arrière en cas de conflit.
 
-**Suivi Expédition** — Timeline événementielle montrant les jalons confirmés. Le badge Sync indique la connexion en direct. L'ETA reflète la dernière position GPS, pas un calcul.
+**Suivi d'Expédition (chauffeur)** — Timeline des étapes de l'expédition pilotée par les événements, un badge de synchronisation live et un indicateur « mis à jour il y a », pour que le chauffeur sache toujours à quel point les données sont fraîches.
 
-**Poste de Matching** — Offres actives avec candidats chauffeurs classés. Indicateur en direct et flux de confirmation. Piloté par les timestamps d'événements, pas des valeurs auto-déclarées.
+**Poste de Matching (dispatcher)** — Le dispatcher choisit comment les offres sont publiées (par exemple « First Accept — le meilleur match est prioritaire »), en arbitrant entre vitesse, maîtrise des coûts et choix du chauffeur. Les chauffeurs candidats sont classés par un score composite d'ETA, de fiabilité et de coût.
 
 ---
 
@@ -62,27 +78,29 @@ Chaque écran est un read model. Chaque état est intentionnel. Ce ne sont pas d
 
 ### Une bibliothèque de composants domain-driven — pas visuelle.
 
-Le design system FlexFret est organisé autour des **catégories d'état système**, pas des patterns visuels. Chaque composant est un rendu d'un type spécifique d'état backend. Cela rend le système prévisible, extensible et directement aligné avec l'engineering.
+Le design system est organisé autour de **catégories d'état système**, pas de patterns visuels. Chaque composant rend un type précis d'état backend. Le système reste ainsi prévisible, extensible et aligné avec l'engineering.
 
 ### State Primitives — Indicateurs atomiques pour l'état distribué
 
-Le niveau le plus bas du système : des atomes visuels individuels communicant un seul concept d'état — un cycle de vie domaine, un état de commande async, un signal de santé SLA, un compte à rebours, un indicateur de sync, ou un flag de conflit — chacun avec un langage visuel distinct.
+Six familles d'atomes visuels, chacune exprimant un seul concept d'état : cycle de vie métier, état asynchrone d'une commande, santé SLA, compte à rebours, synchronisation, ou conflit.
 
 <CaseImage src="/images/flexfret/ui-primitives.png" alt="FlexFret State Primitives — 6 familles primitives : Status, Async State, SLA/Time, Countdown, Sync, Conflict/Divergence" caption="State Primitives : six familles atomiques, chacune encodant un concept système distinct" />
 
 ### Composants Composés — Surfaces UI complètes construites sur les primitives
 
-Six composants UI majeurs couvrant le cycle de vie complet de l'offre à la livraison. Chaque composant composé enveloppe des primitives dans une surface cohérente avec une couverture d'état définie.
+Six composants composés couvrent le cycle de vie de l'offre à la livraison : Système de Badges Statut, Carte Offre, Timeline, Panneau Assignation, Bannière Exception et Table de Données.
 
 <CaseImage src="/images/flexfret/ui-composed.png" alt="FlexFret Composants Composés — Système de Badges Statut, Carte Offre, Timeline, Panneau Assignation, Bannière Exception, Table de Données" caption="Composants Composés : toutes les surfaces UI majeures, de l'offre à la livraison" />
 
-**Carte Offre** — Représente le cycle de vie complet de l'offre : Ouverte (avec compte à rebours) → En attente d'acceptation → Acceptée non confirmée → Confirmée. Chaque état change les contrôles disponibles et la hiérarchie d'information.
+**Carte Offre** — Couvre chaque état d'une offre : Ouverte (avec compte à rebours) → En attente d'acceptation → Acceptée non confirmée → Confirmée. Chaque état modifie les contrôles disponibles et la hiérarchie d'information. Un chauffeur ne voit jamais une action qui ne correspond pas à une commande valide.
 
-**Composant Timeline** — Visualisation de jalons événementielle. Ne montre que les événements confirmés. L'indicateur de progression est une lecture temps réel du journal d'événements, pas un calcul.
+**Timeline** — Visualisation des étapes pilotée par les événements. Les étapes passées portent leur horodatage ; les suivantes restent en attente.
 
-**Panneau Assignation** — Assignation chauffeur avec prochaine action. Le CTA change selon l'état de l'assignation : "Confirmer arrivée au chargement", "Confirmer chargement complet".
+**Panneau Assignation** — L'assignation du chauffeur avec la prochaine action. L'action principale change selon l'état de l'assignation, par exemple « Confirmer l'arrivée à la livraison ».
 
-**Bannière Exception** — Quatre niveaux de sévérité (Info, Avertissement, Erreur, Critique) avec structure constante : ce qui a mal tourné, qui en est responsable, quand, quoi faire. Les actions Réessayer et Escalader routent vers le pattern correct.
+**Bannière Exception** — Quatre niveaux de sévérité (Info, Warning, Error, Critical) avec une même structure : ce qui a échoué, qui en est responsable, quand, et quoi faire. Les actions Réessayer et Escalader renvoient vers le bon pattern.
+
+**Table de Données** — Table d'assignations à haute densité avec primitives de synchronisation, filtrable par santé SLA (dans les temps, à risque, dépassé).
 
 ---
 
@@ -90,62 +108,80 @@ Six composants UI majeurs couvrant le cycle de vie complet de l'offre à la livr
 
 ### Les state machines ne sont pas une préoccupation engineering. Ce sont un outil de design.
 
-Chaque composant interactif dans FlexFret est supporté par une state machine explicite. Ce n'est pas une formalité technique — c'est la façon dont le design fait des affirmations explicites sur chaque scénario UI possible. **Il n'existe aucun état indéfini dans cette UI.**
+Chaque composant interactif repose sur une state machine explicite. C'est ainsi que le design affirme explicitement chaque scénario possible de l'UI. **Il n'y a aucun état indéfini dans cette UI.**
 
-Sans modélisation formelle des états, les designers UX supposent implicitement un chemin heureux. Les cas limites — timeout pendant l'acceptation d'offre, conflit sur la confirmation d'assignation, hors ligne pendant la livraison — sont soit découverts en QA, soit, pire, en production. Les state machines forcent l'énumération avant qu'un seul pixel ne soit rendu.
+Sans modélisation formelle des états, on suppose implicitement un chemin heureux. Les cas limites — timeout pendant l'acceptation d'une offre, conflit à la confirmation d'une assignation, perte de réseau pendant la livraison — sont découverts en QA ou, pire, en production. Les state machines forcent à tout énumérer avant de dessiner le moindre pixel.
 
 <CaseImage src="/images/flexfret/ui-state-machines.png" alt="FlexFret State Machines — 6 spécifications formelles : Acceptation Offre, Cycle de vie Assignation, Traitement Commande, Sync Hors ligne, Péremption Données, Résolution Conflit" caption="Six state machines : spécifications formelles pour chaque surface interactive" />
 
-**Acceptation Offre** — `DISPONIBLE → ACCEPTATION_OPTIMISTE → CONFIRMATION_EN_ATTENTE → ACCEPTÉ`. Un seul chauffeur peut atteindre ACCEPTÉ par offre. CONFIRMATION_EN_ATTENTE doit expirer après 30s max.
+**Acceptation d'offre** — `AVAILABLE → OPTIMISTIC_ACCEPT → PENDING_CONFIRMATION → ACCEPTED`, avec les branches REJECTED, CONFLICT, EXPIRED et WITHDRAWN. L'état optimiste doit apparaître en moins de 100 ms (perception utilisateur). Après 30 s, l'attente s'affiche comme périmée ; elle expire au bout de 60 s maximum. Un seul chauffeur peut atteindre ACCEPTED par offre.
 
-**Cycle de vie Assignation** — 12 états : CRÉÉ → MATCHING → ASSIGNÉ → EN_ROUTE_CHARGEMENT → ARRIVÉ_CHARGEMENT → CHARGEMENT → EN_TRANSIT → ARRIVÉ_LIVRAISON → DÉCHARGEMENT → COMPLÉTÉ, plus les branches RETARDÉ, ANNULÉ, ÉCHOUÉ.
+**Cycle de vie de l'assignation** — 12 états : CREATED → MATCHING → OFFERED → ASSIGNED → CONFIRMED → AT_PICKUP → LOADING → IN_TRANSIT → AT_DELIVERY → COMPLETING → COMPLETED, plus CANCELLED / FAILED.
 
-**Traitement Commande** — Couvre chaque action utilisateur à travers toutes les vues acteurs sur le cycle de vie complet des requêtes : état optimiste, confirmation serveur, backoff exponentiel, et échec permanent.
+**Traitement des commandes** — Couvre chaque action utilisateur sur tout le cycle de la requête : état optimiste, confirmation serveur, rejet, conflit, backoff exponentiel et échec permanent.
 
-**Sync Hors Ligne** — `EN_LIGNE → DÉGRADÉ → HORS_LIGNE → SYNCHRONISATION → SYNC_TERMINÉ`. Restauration de connexion en 6 phases. Commandes en attente persistées en IndexedDB.
+**Synchronisation hors ligne** — `ONLINE → DEGRADED → OFFLINE → SYNCING → SYNC_COMPLETE`, avec SYNC_FAILED quand une commande en file entre en conflit. Les commandes mises en file hors ligne sont conservées dans IndexedDB.
 
-**Péremption Données** — `FRAÎCHES (<5s) → RÉCENTES (5–30s) → PÉRIMÉES (30s–5min) → TRÈS_PÉRIMÉES (>5min) → ACTUALISATION`. Actions bloquées ou dégradées selon l'âge des données.
+**Péremption des données** — `FRESH (<5s) → RECENT (5–30s) → STALE (30s–5m) → VERY_STALE (>5m)`, avec REFRESHING et REFRESH_FAILED. Les actions sont bloquées ou dégradées selon l'âge des données.
 
-**Résolution Conflit** — `PAS_DE_CONFLIT → CONFLIT_DÉTECTÉ → ANALYSE → AUTO_RÉSOLVABLE / REQUIERT_UTILISATEUR → RÉSOLU`. Quatre types de conflits, quatre stratégies de résolution.
+**Résolution de conflit** — `NO_CONFLICT → CONFLICT_DETECTED → ANALYZING → AUTO_RESOLVABLE / REQUIRES_USER → RESOLVING → RESOLVED`. Quatre types de conflit, quatre stratégies de résolution.
+
+### Des règles métier encodées comme conditions de transition
+
+Certaines transitions ne sont possibles qu'avec une preuve du terrain :
+
+| Transition | Requis avant que l'UI l'autorise |
+|---|---|
+| CONFIRMED → AT_PICKUP | GPS à moins de 500 m du point d'enlèvement ; chauffeur en service |
+| AT_PICKUP → IN_TRANSIT | Confirmation du chargement (photo ou signature) ; heure de départ enregistrée |
+| AT_DELIVERY → COMPLETED | Signature du destinataire ou preuve photo ; horodatage enregistré |
 
 ---
 
 ## Patterns d'Interaction
 
-Six patterns d'interaction formels documentés comme spécifications comportementales pour l'équipe engineering — définissant exactement ce que fait l'UI dans chaque scénario, pas seulement le chemin heureux.
+Six patterns d'interaction, documentés comme spécifications comportementales pour l'équipe engineering — ils définissent ce que fait l'UI dans chaque scénario, pas seulement dans le chemin heureux.
 
 <CaseImage src="/images/flexfret/ui-interactions.png" alt="FlexFret Patterns d'Interaction — 6 spécifications comportementales : UI Optimiste, Réessai après Échec, Résolution Conflit, Mode Hors Ligne, Péremption Données, Réordonnancement Événements" caption="Six patterns d'interaction : spécifications comportementales pour chaque mode d'échec système" />
 
-**UI Optimiste** — Montrer l'état voulu immédiatement, réconcilier avec l'état autoritaire. Quatre règles : feedback visuel immédiat → commande envoyée au backend → fenêtre de confirmation → timeout déclenche la résolution de conflit.
+**UI optimiste** — Afficher l'état voulu immédiatement, puis le réconcilier avec l'état de référence. Quatre règles : retour visuel immédiat → commande envoyée avec un identifiant de corrélation → confirmation comparée à l'état optimiste → « en attente de synchro » après 30 s, réessai proposé après 60 s.
 
-**Réessai après Échec** — Backoff exponentiel : 1s → 2s → 4s → 8s → 16s → Manuel. Trois catégories d'échec : Réseau Transitoire (réessai), Serveur 5xx (réessai), Violation Règle Métier (NE PAS réessayer).
+**Réessai après échec** — Backoff exponentiel : 1 s → 2 s → 4 s → 8 s → 16 s → réessai manuel. Quatre catégories d'échec : réseau transitoire (réessayer), erreur serveur 5xx (réessayer), timeout (réessayer), rejet par règle métier 4xx (NE PAS réessayer — annuler et expliquer).
 
-**Résolution Conflit** — Quatre types de conflits, quatre stratégies : Action Concurrente → Dernière-Écriture-Gagne. Lecture Périmée → Actualiser-et-Notifier. Règle Métier → Mise-à-jour-Initiée-Système. Réordonnancement → Tri-par-Timestamp.
+**Résolution de conflit** — Quatre types de conflit, quatre stratégies : Action concurrente → Last-Write-Loses. Lecture périmée → Refresh-and-Notify. Règle métier → System-Initiated-Update. Réordonnancement d'événements → Timestamp-Based-Ordering.
 
-**Mode Hors Ligne (Chauffeur)** — Cinq états de connectivité avec ensembles de capacités explicites à chaque niveau. Flux de restauration de connexion en 6 phases. Commandes mises en file hors ligne, synchronisées à la reconnexion.
+**Mode hors ligne (chauffeur)** — Quatre états de connectivité (en ligne, dégradé, hors ligne, synchronisation), chacun avec des capacités explicites, et une restauration de connexion en six étapes : indicateur de reconnexion → récupération de l'état serveur → vérification des conflits → envoi des commandes en file par priorité → réconciliation → retour en ligne.
 
-**Péremption Données** — FRAÎCHES : pas d'indicateur. RÉCENTES : pas d'indicateur. PÉRIMÉES : bannière, actualisation automatique. TRÈS_PÉRIMÉES : forcer actualisation, désactiver actions critiques.
+| Hors ligne, le chauffeur peut | Hors ligne, le chauffeur ne peut pas |
+|---|---|
+| Consulter les détails d'assignation en cache | Accepter de nouvelles offres |
+| Mettre à jour le statut de l'assignation (en file) | Voir les mises à jour d'offres en temps réel |
+| Enregistrer des points de passage (en file) | Contacter le dispatch par chat |
+| Prendre photos et signatures (stockées localement) | Voir la position des autres chauffeurs |
+| Naviguer vers une destination en cache · utiliser les cartes hors ligne | Accéder au trafic en temps réel |
 
-**Réordonnancement Événements** — Gère l'arrivée hors ordre, les événements retardés, les doublons, les mises à jour partielles. Les événements critiques (ExpéditionAnnulée, ViolationSLA, UrgenceSystème) sont toujours traités immédiatement.
+**Péremption des données** — FRESH et RECENT : aucun indicateur. STALE : afficher « mis à jour il y a X s » et rafraîchir automatiquement. VERY_STALE : forcer le rafraîchissement et désactiver les actions critiques — accepter une offre, réassigner un chauffeur et confirmer une livraison exigent des données fraîches.
+
+**Réordonnancement d'événements** — Gère les arrivées dans le désordre, les événements retardés, les doublons et les mises à jour partielles. Les événements critiques (ShipmentCancelled, DriverIncident, SLABreach, SystemEmergency) sont toujours traités immédiatement, quel que soit l'ordre.
 
 ---
 
 ## Quatre Choix Délibérés
 
-**Exposer les états système plutôt que les cacher.** L'instinct par défaut est de masquer la complexité. FlexFret accepte la complexité visuelle en échange de la confiance des opérateurs. Ceux qui comprennent ce que fait le système prennent de meilleures décisions.
+**Exposer les états du système au lieu de les cacher.** Le réflexe est de cacher la complexité derrière un spinner. FlexFret accepte plus de complexité visuelle en échange de la confiance des opérateurs : ceux qui comprennent ce que fait le système prennent de meilleures décisions.
 
-**Concevoir pour l'échec par défaut, pas par exception.** Chaque état d'échec est une préoccupation de design à part entière. Les écrans d'erreur, timeout et conflit reçoivent le même investissement design que les états de succès. Résultat : un produit qui gère les pannes gracieusement.
+**Concevoir l'échec comme la norme, pas l'exception.** Les états d'erreur, de timeout et de conflit reçoivent le même investissement de design que les états de succès : les chemins d'échec sont conçus plutôt que découverts.
 
-**Synchroniser plusieurs acteurs par la visibilité des événements.** Quand un dispatcher assigne un chauffeur, le chauffeur doit savoir pourquoi. Le design expose la causalité des événements entre les frontières des acteurs — éliminant la source la plus courante d'échecs de coordination.
+**Synchroniser plusieurs acteurs par la visibilité des événements.** Quand un dispatcher assigne un chauffeur, le chauffeur doit savoir pourquoi. Le design expose la causalité des événements d'un acteur à l'autre.
 
-**UX événementielle plutôt que requête-réponse.** On soumet, le serveur met en file, les événements confirment ou infirment. Une gestion d'état frontend plus complexe — mais qui passe à l'échelle avec des acteurs concurrents sur un état partagé en direct.
+**UX pilotée par les événements plutôt que requête-réponse.** On soumet, le serveur met en file, les événements confirment ou refusent. La gestion d'état côté front est plus complexe, mais elle tient avec des acteurs concurrents sur un état partagé en direct.
 
 ---
 
 ## Conclusion
 
-<Callout>« La meilleure UX pour un système distribué est celle qui rend le comportement du système lisible — pas celle qui le cache. »</Callout>
+<Callout>« La meilleure UX pour un système distribué est celle qui rend son comportement lisible — pas celle qui le cache. »</Callout>
 
-FlexFret a été conçu à partir du modèle de domaine vers l'extérieur — pas des wireframes vers l'intérieur. Chaque composant est un read model. Chaque pattern d'interaction est une spécification formelle. Chaque transition d'état est énumérée avant qu'un seul écran n'existe.
+FlexFret a été conçu du modèle de domaine vers l'extérieur, pas des wireframes vers l'intérieur. Chaque composant est un read model, chaque pattern d'interaction une spécification formelle, et chaque transition d'état est énumérée avant qu'un écran existe.
 
-Le résultat est un produit où l'engineering et le design parlent le même langage : Commandes, Événements, State Machines, Agrégats. Où un nouvel événement backend devient automatiquement un état UI. Où chaque mode d'échec a un chemin de récupération conçu.
+Engineering et design partagent un même vocabulaire — Commands, Events, State Machines, Aggregates — et chaque mode d'échec a un chemin de récupération conçu. Les spécifications ont été transmises à l'équipe du client à la fin de ma mission.

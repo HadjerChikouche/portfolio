@@ -17,7 +17,7 @@
   },
   "hero": {
     "role": "UX/UI & Product Designer",
-    "tagline": "Je conçois des expériences qui rendent les choses complexes naturelles.",
+    "tagline": "Je conçois des produits qui restent clairs quand le système derrière eux est complexe — décisions d'IA, données en temps réel, plusieurs acteurs à la fois.",
     "cta": "Voir mes projets"
   },
   "featured": {
@@ -26,7 +26,7 @@
     "viewAll": "Voir tous les projets"
   },
   "about": {
-    "teaser": "Je suis UX/UI et product designer. Je crois que le bon design naît à l'intersection de la clarté, de l'empathie et du soin apporté aux détails.",
+    "teaser": "Je suis UX researcher et designer, avec un parcours d'ingénieure. Je suis à mon meilleur sur des produits bâtis sur des systèmes complexes — pipelines d'IA, opérations en temps réel — où les utilisateurs doivent pouvoir se fier à ce qu'ils voient.",
     "cta": "En savoir plus",
     "title": "À propos",
     "bio1": "Je conçois des produits numériques qui résolvent de vrais problèmes — avec un processus ancré dans la recherche, l'itération et l'attention aux détails.",
@@ -60,7 +60,7 @@
     },
     "viewCase": "Voir le case study",
     "role": "Rôle",
-    "duration": "Durée",
+    "duration": "Période",
     "tools": "Outils",
     "platform": "Plateforme",
     "count": "projets",

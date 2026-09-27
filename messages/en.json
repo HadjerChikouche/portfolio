@@ -17,7 +17,7 @@
   },
   "hero": {
     "role": "UX/UI & Product Designer",
-    "tagline": "I design experiences that make complex things feel simple.",
+    "tagline": "I design products that stay clear when the system behind them is complex — AI decisions, real-time data, many people acting at once.",
     "cta": "See my work"
   },
   "featured": {
@@ -26,7 +26,7 @@
     "viewAll": "View all projects"
   },
   "about": {
-    "teaser": "I'm a UX/UI and product designer who believes great design lives at the intersection of clarity, empathy, and craft.",
+    "teaser": "I'm a UX researcher and designer with an engineering background. I work best on products built on complex systems — AI pipelines, real-time operations — where people need to trust what they see.",
     "cta": "More about me",
     "title": "About",
     "bio1": "I design digital products that solve real problems — with a process rooted in research, iteration, and attention to detail.",
@@ -60,7 +60,7 @@
     },
     "viewCase": "View case study",
     "role": "Role",
-    "duration": "Duration",
+    "duration": "Period",
     "tools": "Tools",
     "platform": "Platform",
     "count": "projects",

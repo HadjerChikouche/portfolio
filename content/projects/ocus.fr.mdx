@@ -1,8 +1,22 @@
-## Vue d'ensemble
+## En bref
 
-OCUS est une marketplace photo qui connecte des marques mondiales à un réseau de photographes professionnels pour des shootings commerciaux. J'ai conçu **AI Image Enhancement** — une plateforme d'opérations média interne qui repense le contrôle qualité à grande échelle.
+**Problème.** Le contrôle qualité manuel de chaque image ne suivait plus les volumes de la marketplace, et les standards de qualité variaient selon les clients et les opérateurs.
 
-Le défi n'était pas esthétique. Il était systémique : comment rendre le contrôle qualité assisté par IA lisible et fiable, quand les opérateurs ne peuvent pas vérifier chaque décision manuellement ?
+**Mon rôle.** UX Researcher (Analyse des usages & Spécifications) et UX Designer : recherche utilisateur, analyse des retours utilisateurs, tests d'utilisabilité, analyse des KPI, conception des workflows et contribution à la priorisation du backlog.
+
+**Équipe.** Product Manager, Senior Product Designer, un autre UX Designer, data analysts et développeurs.
+
+**Décision clé.** Router les images selon la confiance de l'IA, pour que les humains examinent les exceptions et non chaque asset.
+
+**Résultats.** 120 h de délai de livraison économisées (↓20 % vs référence manuelle) · +24 % de CTR · +16 % de précision des livrables · 10 000 images traitées en pilote live avec Uber Eats France.
+
+---
+
+## Contexte
+
+OCUS est une marketplace photo qui connecte des marques à un réseau de photographes professionnels. Ses clients (livraison de repas, immobilier, eCommerce) dépendent de la qualité des images pour convertir.
+
+Nous avons conçu **AI Image Enhancement** : un produit B2B d'opérations média qui prend des décisions qualité à l'échelle d'une marketplace. Mon travail a couvert la recherche, les spécifications et la conception du workflow de revue.
 
 ---
 
@@ -10,29 +24,55 @@ Le défi n'était pas esthétique. Il était systémique : comment rendre le con
 
 ### Le QA manuel échouait sur trois dimensions simultanément
 
-Le processus existant demandait aux opérateurs humains de contrôler chaque image de chaque collection. À l'échelle d'OCUS, cela s'effondrait de trois façons à la fois :
+Les images venaient de photographes répartis partout, sous des éclairages variables, avec un respect inégal des standards de marque. Le workflow d'origine reposait sur un QA manuel et des reshootings. À l'échelle, il échouait de trois façons à la fois :
 
-**Volume** — L'équipe ne pouvait pas inspecter 10 000+ images par collection sans compresser le temps de revue au point de le rendre inutile.
+**Volume** — Des dizaines de milliers d'images créaient des goulets de revue qu'aucune équipe ne pouvait absorber.
 
-**Ambiguïté** — Les décisions qualité étaient subjectives. Des opérateurs différents prenaient des décisions différentes sur la même image. Il n'existait aucun standard partagé, seulement des normes informelles.
+**Cohérence** — Les standards qualité étaient appliqués de façon inégale selon les clients et les opérateurs, sans règles partagées.
 
-**Cohérence de marque** — Chaque client avait des exigences esthétiques différentes. Sans moyen d'encoder ces exigences en amont, les corrections arrivaient en aval — dans des cycles de révision, pas à la soumission.
+**Vitesse** — L'inspection manuelle retardait la mise en ligne et augmentait le coût opérationnel par image.
+
+<Callout>Le problème produit n'était pas « améliorer l'édition d'image ». Il fallait construire un système capable de prendre des décisions qualité à l'échelle sans obliger les humains à inspecter chaque asset — automatiser assez pour lever les limites de débit, tout en gardant assez de contrôle pour satisfaire les parties prenantes marque et opérations.</Callout>
+
+---
+
+## Recherche
+
+### Entretiens, questionnaires et observations sur quatre secteurs
+
+Nous avons mené des entretiens utilisateurs, des questionnaires et des observations auprès d'utilisateurs de la food tech, de l'immobilier, du voyage et de l'eCommerce, en parallèle d'une analyse concurrentielle. Cette recherche a fixé la direction du produit : qui décide, qui opère, et ce dont chacun a besoin.
+
+| Secteur | Objectifs | Pain points | Besoins |
+|---|---|---|---|
+| Livraison de repas (Uber Eats, Deliveroo) | Optimisation des coûts · Hausse du CTR · Meilleure expérience partenaire | Processus manuel · Temps d'upload des images | Fluidifier les processus · Améliorer la qualité image · Aider les partenaires à gérer leurs images |
+| Immobilier | Optimisation des coûts · Accélérer la mise sur le marché | Processus manuel · Temps d'upload des images | Couverture photo de qualité · Suivre la concurrence · Outil photo abordable pour convertir |
+| eCommerce | Optimisation des coûts · Expérience client cohérente · Hausse du CTR | Images incohérentes · Mauvaises fiches produit | QA et post-production fluides · Images et contenus pour le SEO · Meilleure qualité image |
+
+### Deux personas, deux surfaces produit
+
+| Persona | Qui | Principales difficultés | Ce que nous avons conçu pour eux |
+|---|---|---|---|
+| **Check Signer** | Product, Brand Marketing, Opérations, Finance, Business Ops — au cœur de la décision | Capacité interne insuffisante · Opérations coûteuses · Incohérences et assets non conformes accumulés | Dashboards · Synthèses KPI · Configuration des règles · Rapports ROI |
+| **Utilisateur / Opérateur** | Équipes QA, Ops et Photo — proches de la qualité de production, elles fixent les standards | Incohérences du workflow ops · QA lent · Aucun outil pour automatiser les guidelines | Revue d'images · Validation par lot · Inspection des alertes IA · Configuration des presets |
 
 ---
 
 ## Paysage Concurrentiel
 
-### Huit concurrents. Personne ne possédait le pipeline complet.
+### Personne ne possédait le pipeline complet
 
-J'ai cartographié le marché selon deux axes : évaluation de la qualité image vs. capacité d'amélioration. Chaque concurrent dominait un axe. Personne n'avait construit un pipeline intégré QA + Amélioration + Livraison. C'est ce manque qui constituait l'opportunité produit.
+Nous avons cartographié le marché selon deux axes : évaluation de la qualité image vs capacité d'amélioration. Chaque concurrent dominait un axe. Personne n'avait construit un pipeline intégré QA + Amélioration + Livraison. C'est ce manque qui constituait l'opportunité produit.
 
-| Concurrent | Type | Capacité | Écart vs OCUS |
+| Concurrent | Type | Capacité principale | Écart vs OCUS |
 |---|---|---|---|
-| Clarifai | IA Image | Évaluation qualité & benchmark d'amélioration | Pas de couche workflow ; API uniquement |
-| Photoroom | Enrichissement | Détourage, composition, suppression fond | Plateforme photo d'abord ; pas de QA IA |
-| RestB | IA Image | Reconnaissance et tagging d'images immobilières | Vertical spécifique ; non extensible |
-| Previsite / Nodalview | Perf image + Enrichissement | Métriques de performance + couche enrichissement | Vertical étroit ; pas de food/ecomm |
-| Foxy AI / Imagen | IA Image | Génération d'images & scoring qualité basique | Pas d'application des règles de marque |
+| Clarifai | Image | Identification de style, évaluation qualité & benchmark d'amélioration | Pas de couche workflow ; API uniquement, pas d'interface opérateur |
+| Photoroom | Image | Recadrage, flou, changement d'angle, collage, in-painting, suppression de filigrane/logo/personnes | Orienté grand public ; pas de pipeline QA B2B ni de presets de marque |
+| Meero / Autoretouch | Enrichissement | Guidelines personnalisables, corrections d'alignement, détection de palette, notes utilisateurs | Plateforme photo d'abord ; pas d'alertes QA IA pour food/eCommerce à l'échelle |
+| RestB | Enrichissement | Reconnaissance et tagging d'images immobilières | Vertical spécifique ; non extensible à la food ou à l'eCommerce |
+| Previsite / Nodalview | Perf image · Enrichissement | Métriques de performance image + enrichissement pour l'immobilier | Vertical étroit ; pas de livraison de repas ni d'eCommerce |
+| Foxy AI / Imagen | Image | Génération d'images et scoring qualité basique | Génération d'abord ; pas d'application des règles de marque ni de workflow de rejet |
+
+<Callout>Photoroom était le parallèle technique le plus proche, mais servait des créateurs individuels, pas des équipes ops de marque gérant plus de 10 000 images par mois. L'avantage concurrentiel, c'était le workflow — presets de marque → pipeline IA → validation humaine → livraison — pas une capacité IA isolée.</Callout>
 
 ---
 
@@ -40,31 +80,51 @@ J'ai cartographié le marché selon deux axes : évaluation de la qualité image
 
 ### Un système de décision à trois acteurs, pas un outil à écran unique
 
-Le produit fonctionnait comme un système de décision à trois acteurs. **Les opérateurs** géraient les exceptions QA et protégeaient le débit. **Les brand managers** définissaient les règles qualité et évaluaient l'impact commercial. **Les services IA** détectaient les défauts, proposaient des améliorations, et produisaient des décisions scorées par niveau de confiance.
+Les **opérateurs** géraient les exceptions QA et protégeaient le débit. Les **brand managers** définissaient les règles qualité et évaluaient l'impact business. Les **services IA** détectaient les défauts, proposaient des améliorations et produisaient des décisions notées par un score de confiance.
 
-L'IA n'était pas un utilitaire de fond — c'était un décideur actif dont les outputs façonnaient le workflow, la priorité des files, et l'attention humaine. Cela a transformé le problème de design en un modèle opératoire distribué à quatre frontières système.
+L'IA n'était pas un utilitaire en arrière-plan : c'était un décideur actif, dont les sorties façonnaient le workflow, la priorité des files et l'attention humaine. Le problème de design devenait un modèle opérationnel distribué avec quatre frontières système : **Ingestion** (assets et métadonnées), **Décision** (analyse qualité IA et propositions d'amélioration), **Résolution** (validation, correction ou rejet humain) et **Reporting** (débit et résultats business).
 
 ---
 
-## Cinq Décisions Architecturales
+## Cinq Décisions, Chacune Avec un Arbitrage Explicite
 
-Chaque choix structurel résultait d'un arbitrage entre performance système et contraintes opérationnelles découvertes en recherche. Les changements à plus fort levier étaient structurels, pas visuels.
+Les changements les plus structurants étaient architecturaux, pas visuels. Chacun est né d'un arbitrage entre performance du système et contraintes opérationnelles découvertes en recherche.
 
 <DecisionGrid>
 <Decision number="Décision 01" title="Examiner les exceptions, pas chaque asset">
-La revue manuelle de chaque image ne passait pas à l'échelle. Le compromis : limiter la supervision humaine en échange du débit. Le scoring de confiance de l'IA détermine ce qui remonte à la revue — les opérateurs ne voient jamais le travail routinier.
+**Contexte.** La revue manuelle de chaque image ne passait pas à l'échelle.
+
+**Arbitrage.** Moins de supervision humaine universelle en échange d'un débit bien plus élevé.
+
+**Résultat.** L'attention humaine s'est déplacée vers les cas ambigus ; le traitement par lot est devenu le mode opératoire par défaut.
 </Decision>
 <Decision number="Décision 02" title="Déplacer la configuration de marque au début du flux">
-Les décisions qualité dépendaient de seuils spécifiques à la marque, mais la configuration arrivait trop tard. La déplacer en amont permettait à l'IA d'appliquer le bon standard automatiquement, sans intervention opérateur image par image.
+**Contexte.** Les décisions qualité dépendaient de seuils propres à chaque marque, mais la configuration arrivait trop tard.
+
+**Arbitrage.** Un choix supplémentaire en amont en échange d'une automatisation plus propre en aval.
+
+**Résultat.** Moins de retraitement et des règles plus cohérentes — les assets entraient dans le pipeline avec la bonne politique de décision.
 </Decision>
 <Decision number="Décision 03" title="Combiner les constats QA et les actions d'amélioration sur une seule surface">
-Séparer la revue de l'amélioration forçait à changer de contexte. Une surface unifiée permettait des décisions plus rapides et mieux informées, avec le contexte qualité complet visible en un seul endroit.
+**Contexte.** Séparer la revue des défauts de la validation des améliorations obligeait les opérateurs à reconstituer le contexte d'un écran à l'autre.
+
+**Arbitrage.** Une interface plus dense en échange de décisions plus rapides et mieux informées.
+
+**Résultat.** Plus de confiance dans les propositions de l'IA — les opérateurs comparaient le défaut, la recommandation et son impact au même endroit.
 </Decision>
 <Decision number="Décision 04" title="Utiliser les presets comme unité de passage à l'échelle">
-La configuration image par image rendait le débit et la cohérence impossibles. Les presets permettent de configurer une fois et d'appliquer à toute une collection, réduisant la charge cognitive et les taux d'erreur.
+**Contexte.** La configuration au cas par cas rendait les standards incohérents et coûtait cher à mettre en place.
+
+**Arbitrage.** Moins de flexibilité ponctuelle en échange d'une répétabilité entre clients et opérateurs.
+
+**Résultat.** Des contrôles qualité standardisés entre collections et une charge cognitive réduite pour lancer un traitement.
 </Decision>
 <Decision number="Décision 05" title="Traduire les opérations en métriques business">
-Les équipes opérationnelles pouvaient suivre l'activité de traitement, mais les brand managers avaient besoin de preuves de valeur commerciale. L'ajout de métriques connectées aux outputs a rendu la performance visible pour ceux qui finançaient le pipeline.
+**Contexte.** Les équipes opérationnelles voyaient l'activité de traitement, mais les parties prenantes marque avaient besoin de preuves de valeur commerciale.
+
+**Arbitrage.** Un reporting plus complexe en échange d'un ROI produit plus clair.
+
+**Résultat.** Les décisions IA et le débit QA reliés à des métriques média liées à la conversion, visibles par le persona Check Signer.
 </Decision>
 </DecisionGrid>
 
@@ -74,9 +134,9 @@ Les équipes opérationnelles pouvaient suivre l'activité de traitement, mais l
 
 ### Flux 1 — Ingestion de collection
 
-L'opérateur upload un lot, sélectionne un preset client, et déclenche le traitement IA. Les images sont routées automatiquement selon le scoring de confiance — pas de triage manuel de la file complète.
+L'opérateur uploade un lot, sélectionne un preset client et lance le traitement IA. Les images sont routées automatiquement selon leur score de confiance — pas de tri manuel de toute la file.
 
-Les résultats haute confiance avancent directement. Les cas ambigus ou basse confiance remontent dans la file de revue. L'opérateur ne voit jamais le travail routinier.
+Les résultats à haute confiance passent directement. Les cas à faible confiance ou ambigus arrivent dans la file de revue. L'opérateur ne voit jamais le travail de routine.
 
 <CaseImage src="/images/ocus/ui-flow1-screens.png" alt="Écran 1.1 (création de collection) et Écran 1.2 (upload média) côte à côte" caption="Écrans 1.1 & 1.2 — Création de collection (drag-drop) · Upload média avec configuration en parallèle" crop="1736/869" />
 
@@ -84,19 +144,19 @@ Les résultats haute confiance avancent directement. Les cas ambigus ou basse co
 
 ### Flux 2 — Revue assistée par IA
 
-L'opérateur ouvre une collection sur laquelle les décisions IA ont déjà été appliquées. Les résultats haute confiance restent peu intrusifs. Les cas ambigus sont remontés. La surface de revue affiche les problèmes détectés et les propositions d'amélioration dans un seul contexte de décision.
+L'opérateur ouvre une collection où les décisions IA sont déjà appliquées. Les résultats à haute confiance restent fluides ; les cas ambigus remontent. Défauts détectés et propositions d'amélioration sont réunis dans un même contexte de décision : dans la checklist QA, une case cochée signale une violation, et les améliorations restent « proposées » jusqu'à ce que l'opérateur les valide.
 
-<Callout>L'opérateur ne devrait pas examiner les outputs IA. Il devrait examiner les exceptions — les cas où l'incertitude de l'IA est assez haute pour justifier un jugement humain.</Callout>
+<Callout>L'opérateur ne devrait pas examiner les sorties de l'IA. Il devrait examiner les exceptions — les cas où l'incertitude de l'IA est assez forte pour justifier un jugement humain.</Callout>
 
 <CaseImage src="/images/ocus/ui-flow2-review.png" alt="Flux 2 : Revue par lot assistée IA — QA et actions d'amélioration co-localisés" caption="Écran 2 — Revue par lot assistée IA : Barre de sélection · Checklist QA IA · Panneau d'amélioration" />
 
 ### Flux 3 — Livraison et reporting
 
-Les assets approuvés passent en livraison finale. Les assets rejetés entrent en récupération. Deux surfaces dashboard servent des horizons temporels différents — une vue temps réel pour le monitoring opérationnel, une vue reporting pour les métriques client.
+Les assets approuvés partent en livraison finale. Les assets rejetés entrent en récupération. Deux dashboards servent des horizons de temps et des acteurs différents — une vue temps réel pour le pilotage opérationnel, une vue reporting pour les métriques clients.
 
 <CaseImage src="/images/ocus/ui-flow3-delivery.png" alt="Flux 3 : Dashboards de livraison — vue d'accueil avec synthèse de résultat et vue statistiques avec tendances longitudinales" caption="Écran 3.1 — Vue d'accueil : synthèse résultat de collection avec arbre de solutions IA · Écran 3.2 — Vue statistiques : tendance longitudinale & répartition des services IA" />
 
-Chaque image a suivi un cycle de vie de décision clair — routé par la confiance, résolu par l'autorité de l'acteur.
+Le modèle d'états définissait quel acteur avait l'autorité à chaque étape, quelles actions étaient disponibles, quels assets demandaient une attention humaine et quelles métriques pouvaient être considérées comme définitives ou encore en cours.
 
 <CaseImage src="/images/ocus/ui-flow3-lifecycle.png" alt="State Machine d'un média — Cycle de vie complet : Uploadé → Traitement → Évalué IA → Routé → Auto-approuvé ou Revue requise → Approuvé / Amélioré / Rejeté → Livré" caption="Fig. 3 — Cycle de vie complet d'un média : routé par la confiance, résolu par l'autorité de l'acteur" />
 
@@ -106,55 +166,61 @@ Chaque image a suivi un cycle de vie de décision clair — routé par la confia
 
 ### Construit autour de la gestion de l'incertitude, pas du polish visuel
 
-Le modèle d'interaction avait cinq principes directeurs, chacun dérivé directement de la logique de routage du système et du workflow opérateur — pas des conventions UI.
+Le modèle d'interaction reposait sur cinq principes, chacun dérivé de la logique de routage et du workflow opérateur — pas des conventions d'UI.
 
-**La densité d'information était déterminée par la confiance IA.** Les images haute confiance montraient des contrôles minimaux. Les images basse confiance exposaient tout le contexte disponible, les alternatives, et une action de validation.
+**La confiance de l'IA déterminait la densité d'information.** Les images à haute confiance affichaient un minimum de contrôles. Les images à faible confiance exposaient tout le contexte, les alternatives et une action de validation.
 
-**Prévisualisation et validation étaient séparées.** Cocher enregistrait "en attente" — pas validé. Valider nécessitait une confirmation explicite. Cela donnait aux opérateurs le temps de comparer les alternatives avant de verrouiller une décision.
+**Prévisualisation et validation étaient séparées.** Un basculement enregistrait un état « en attente », pas une validation. Valider demandait une confirmation explicite, pour laisser le temps de comparer les alternatives.
 
-**Les opérations par lot étaient la primitive d'interaction par défaut.** La sélection individuelle était secondaire. Les CTAs principaux changeaient selon l'état de la file : tout sélectionner, approuver la sélection, escalader les exceptions.
+**Les opérations par lot étaient l'interaction par défaut.** La sélection individuelle venait en second. Les actions principales changeaient selon l'état de la file : tout sélectionner, approuver la sélection, escalader les exceptions.
 
-**Les overrides restaient explicites.** L'intervention manuelle était réservée aux cas limites. Le système n'a jamais silencieusement outrepassé une action utilisateur.
+**Les corrections restaient explicites.** L'intervention manuelle était réservée aux cas limites. Le système ne remplaçait jamais silencieusement une action utilisateur.
 
-**La configuration réduisait la charge en aval.** Toute flexibilité exposée dans l'interface devait se payer en supprimant des décisions plus loin dans le pipeline.
+**La configuration allégeait l'aval.** Toute flexibilité exposée dans l'interface devait se justifier en supprimant des décisions plus loin dans le pipeline.
 
 ---
 
-## Trois Découvertes Qui Ont Changé le Produit
+## Validation : Trois Découvertes Qui Ont Changé le Produit
 
-**Le timing des presets était mauvais.** Les utilisateurs créaient les presets après la sélection initiale, pas avant. Découvert uniquement en test utilisateur — aucun raffinement visuel n'aurait pu le révéler. Déplacer la sélection du preset plus tôt a éliminé la principale source d'erreurs de configuration.
+Les tests d'utilisabilité ont confronté les flux à la façon dont les opérateurs travaillaient réellement. Chaque découverte a mené à un changement précis.
 
-**Le nommage des KPIs était trop abstrait.** Les métriques opérationnelles utilisaient une terminologie interne que les opérateurs comprenaient, mais pas les brand managers. Renommer les métriques selon leurs implications commerciales en aval a amélioré la compréhension partagée et la confiance dans le système.
+| Découverte | Ce que nous avons observé | Ce que nous avons changé | Résultat |
+|---|---|---|---|
+| **Le moment du preset était mauvais** | Les utilisateurs attendaient le contexte client avant l'upload, pas après l'ingestion. | La sélection du preset a été placée au début du workflow. | Moins de retraitement, et un système aligné sur la façon dont les opérateurs pensaient leurs collections. |
+| **Les noms des KPI étaient trop abstraits** | Les métriques opérationnelles étaient visibles, mais leurs libellés ne transmettaient pas leur sens business aux parties prenantes. | Métriques reformulées, avec des explications contextuelles là où l'interprétation était ambiguë. | Plus de confiance des parties prenantes dans le reporting. |
+| **Le modèle mental du pipeline IA était vite compris** | Les utilisateurs distinguaient les résultats approuvés, améliorés et rejetés sans explication supplémentaire. | Miser sur la visibilité explicite des états plutôt que sur de l'UI pédagogique. | Un workflow compact, qui préservait la rapidité de lecture des opérateurs. |
 
-**Le modèle mental du pipeline IA a été assimilé rapidement.** Les opérateurs comprenaient la logique de décision de l'IA dès la première session. Le défi n'était pas l'adoption de l'IA — c'était de préserver l'efficacité d'apprentissage des opérateurs tout en maintenant la densité d'information contextuelle.
+<Callout>Placer la sélection du preset plus tôt — découvert uniquement en test d'utilisabilité — a eu plus d'impact sur la réussite des tâches que n'importe quel ajustement visuel. La recherche a révélé le modèle mental ; les tests ont révélé où il cassait.</Callout>
 
 ---
 
 ## Résultats
 
 <Metrics>
-<Metric value="120h" label="économisées par mois — le routage par exceptions a remplacé la revue universelle" />
-<Metric value="+24%" label="performance média — co-localisation des décisions QA et d'amélioration" />
-<Metric value="+16%" label="précision des livrables — les presets ont appliqué les règles de marque de façon cohérente" />
-<Metric value="10k" label="images traitées en pilote live — débit à l'échelle de la production validé" />
+<Metric value="120h" label="de délai de livraison économisées — ↓20 % vs référence manuelle" />
+<Metric value="+24%" label="de CTR, mesuré" />
+<Metric value="+16%" label="de précision des livrables — QA IA + amélioration combinés" />
+<Metric value="10k" label="images traitées — pilote live Uber Eats France" />
 </Metrics>
 
-**120h économisées** par le routage par exception. Déplacer l'attention humaine de la revue universelle vers les cas ambigus a effondré la file d'inspection sans réduire le contrôle qualité.
+Les chiffres ont été calculés à partir des règles business et des métriques définies pour le projet. Chacun se rattache à une décision structurelle.
 
-**+24% de performance média** par la co-localisation. Intégrer les décisions d'amélioration directement dans le workflow QA a poussé l'adoption opérateur des améliorations IA qui étaient auparavant ignorées.
+**120 h économisées** viennent du routage par exceptions. Déplacer l'attention humaine de la revue universelle vers les cas ambigus a vidé la file d'inspection sans réduire le contrôle qualité.
 
-**+16% de précision des livrables** par les presets. Appliquer les règles de marque de façon cohérente sur toute une collection, plutôt que selon le jugement de chaque opérateur, a éliminé l'incohérence qui était la principale source de retravail.
+**+24 % de CTR** vient de la co-localisation. Intégrer les décisions d'amélioration directement dans le workflow QA — plutôt que d'en faire une étape séparée — a fait adopter par les opérateurs des améliorations IA jusque-là ignorées.
 
-**10 000 images traitées** en pilote live ont validé que le système gérait un débit à l'échelle de la production, pas une charge de prototype contrôlée.
+**+16 % de précision des livrables** vient des presets. Appliquer les règles de marque de façon cohérente entre collections, plutôt qu'au cas par cas, a supprimé l'incohérence qui était la principale source de retraitement.
+
+**10 000 images traitées** en pilote live avec Uber Eats France ont validé que le système tenait un débit de production, pas une charge de prototype contrôlée.
 
 ---
 
 ## Apprentissages Clés
 
-**Le modèle système importait plus que la couche interface.** Les utilisateurs ont formé des modèles mentaux de la logique de décision de l'IA dès la première session. Obtenir le bon modèle était un levier plus fort que n'importe quel raffinement visuel.
+**Le modèle système comptait plus que la couche d'interface.** Les gains venaient de la logique de routage, de la revue basée sur la confiance et des contraintes opérationnelles — pas de changements d'UI en surface. L'architecture était le produit.
 
-**Les presets étaient un primitif produit stratégique.** Ce n'était pas une fonctionnalité de configuration — c'était le mécanisme qui rendait les décisions IA lisibles et cohérentes pour l'ensemble des clients.
+**Les presets étaient une primitive produit stratégique.** Ils ont transformé les règles de marque en une couche de contrôle réutilisable entre clients et collections. Le modèle économique en dépendait — et l'idée est venue du design, pas de l'engineering.
 
-**La confiance en l'IA venait du cadrage de la décision, pas du volume d'explication.** Les opérateurs n'avaient pas besoin de comprendre le fonctionnement de l'IA. Ils avaient besoin de comprendre ce que l'IA décidait, et quand l'outrepasser.
+**La confiance dans l'IA venait du cadrage des décisions, pas du volume d'explications.** Les utilisateurs ont adopté le système quand ils voyaient où l'IA agissait seule, où les humains gardaient la main et comment les exceptions étaient traitées.
 
-**Les changements à plus fort levier étaient architecturaux.** Déplacer la sélection du preset plus tôt, intégrer l'amélioration dans le QA, router par la confiance — aucune de ces décisions n'était une décision UI. C'étaient des choix structurels que le design visuel a ensuite rendus exécutables.
+**Les changements les plus structurants étaient architecturaux.** Déplacer la configuration plus tôt et restructurer les surfaces de décision a eu plus d'impact que des améliorations d'écran incrémentales. Concevoir au niveau du flux a surpassé la conception au niveau du composant.
